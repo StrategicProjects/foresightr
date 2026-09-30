@@ -10,8 +10,9 @@ icms <- ts(data$icms / 1e6, start = c(2017, 3), frequency = 12)
 
 External information enters a model in three ways: as regressors of an
 ARIMA model, as a price index that deflates a log-linear regression, and
-as dated events of a Prophet-style model. In every case its values must
-also cover the periods to be forecast.
+as dated events of a Prophet-style model. Regressors and events must
+also cover the periods to be forecast; asking for a forecast beyond them
+is an error.
 
 ## Regression with ARIMA errors
 
@@ -66,20 +67,20 @@ gives one dummy per season instead; combine sets of regressors with
 ## A deflated regression
 
 `model_log_linear(deflator = )` fits trend and seasonality on the
-deflated series and inflates the forecasts back, with the index covering
-the horizon:
+deflated series. The future of the index is not needed: the forecasts
+are inflated back at the growth of the index over the last twelve
+months.
 
 ``` r
 
-first_100 <- window(icms, end = time(icms)[100])
-deflated <- model_log_linear(deflator = data$ipca_index[1:112])
-forecast_model(deflated, first_100, 12)
-#>           Jan      Feb      Mar      Apr      May      Jun      Jul      Aug
-#> 2025                                                       723.0007 735.2485
-#> 2026 800.9495 708.6957 651.4263 688.2408 684.8211 778.6687                  
-#>           Sep      Oct      Nov      Dec
-#> 2025 748.6750 754.8139 770.6882 768.7912
-#> 2026
+deflated <- model_log_linear(deflator = data$ipca_index)
+fit <- fit_model(deflated, icms)
+fit$params[c("trend_growth_pct", "inflation_pct")]
+#> trend_growth_pct    inflation_pct 
+#>         5.698239         4.641328
+predict(fit, 6)
+#>           Jul      Aug      Sep      Oct      Nov      Dec
+#> 2026 787.0978 815.3018 825.3097 818.4892 859.7904 864.7707
 ```
 
 ## Events and steps

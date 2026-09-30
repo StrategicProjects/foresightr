@@ -26,3 +26,12 @@ with_name(model, name, description = NULL)
 ## Value
 
 The model, renamed.
+
+## Examples
+
+``` r
+model <- with_name(model_seasonal_naive(), "same_month", "The same month of last year")
+model
+#> <foresight model> same_month
+#> The same month of last year
+```

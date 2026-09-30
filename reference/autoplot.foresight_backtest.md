@@ -58,7 +58,8 @@ plot(x, ...)
 
 - top:
 
-  How many of the best candidates, for `type = "accuracy"`.
+  How many of the best candidates, for `type = "accuracy"`: at most 4,
+  so that they can be told apart.
 
 - ...:
 
@@ -87,13 +88,10 @@ further.
 ## Examples
 
 ``` r
-# \donttest{
 bt <- backtest(AirPassengers, origins = 24)
 autoplot(bt)
 
 autoplot(bt, "accuracy")
 
 autoplot(decompose_stl(log(AirPassengers), seasonal_window = 13))
-
-# }
 ```

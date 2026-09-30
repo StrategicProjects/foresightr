@@ -91,7 +91,10 @@ the forecast of the next k periods together.</p>
 
 
 <dt id="arg-candidates">candidates<a class="anchor" aria-label="anchor" href="#arg-candidates"></a></dt>
-<dd><p>A list of models; see <code><a href="candidates_default.html">candidates_default()</a></code>.</p></dd>
+<dd><p>A list of models with distinct names (see
+<code><a href="with_name.html">with_name()</a></code>); by default <code><a href="candidates_default.html">candidates_default()</a></code>. A candidate that
+cannot forecast at every origin and from the whole series is left out,
+with a warning.</p></dd>
 
 
 <dt id="arg-period">period<a class="anchor" aria-label="anchor" href="#arg-period"></a></dt>
@@ -112,17 +115,18 @@ get fewer origins.</p></dd>
 
 
 <dt id="arg-window">window<a class="anchor" aria-label="anchor" href="#arg-window"></a></dt>
-<dd><p>Train on the last <code>window</code> observations only (default:
-everything before the origin).</p></dd>
+<dd><p>Train on the last <code>window</code> observations only, at every
+origin and for the final forecast (default: everything before the
+origin).</p></dd>
 
 
 <dt id="arg-combine">combine<a class="anchor" aria-label="anchor" href="#arg-combine"></a></dt>
 <dd><p>Also evaluate the average of the best <code>combine</code> models
-(fewer than 2 disables it).</p></dd>
+(fewer than 2, or more than the candidates left, disables it).</p></dd>
 
 
 <dt id="arg-levels">levels<a class="anchor" aria-label="anchor" href="#arg-levels"></a></dt>
-<dd><p>Coverage of the intervals.</p></dd>
+<dd><p>Coverage of the intervals, each above 0 and below 1.</p></dd>
 
 
 <dt id="arg-metric">metric<a class="anchor" aria-label="anchor" href="#arg-metric"></a></dt>
@@ -130,28 +134,30 @@ everything before the origin).</p></dd>
 
 
 <dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
-<dd><p>Fit the origins on all cores. The result is the same
-either way.</p></dd>
+<dd><p>Fit the origins on several threads: all cores, or as many
+as <code><a href="foresight_threads.html">foresight_threads()</a></code> allows. The result is the same either way.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code>foresight_backtest</code>, a list with</p><ul><li><p><code>ranking</code>: one row per candidate with its <code>score</code>, whether it was
-<code>chosen</code>, the models involved and a description;</p></li>
+    <p>An object of class <code>foresight_backtest</code>, a list with</p><ul><li><p><code>ranking</code>: one row per candidate that went through the backtest, with
+its <code>score</code>, whether it was <code>chosen</code>, the models involved and a
+description; <code>dropped</code> names those left out;</p></li>
 <li><p><code>best</code>: the name of the chosen candidate;</p></li>
 <li><p><code>forecast</code>: the forecast of the chosen candidate with its intervals;</p></li>
 <li><p><code>candidates</code>: for each candidate, its <code>accuracy</code> by horizon (pairs
 evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error <code>bands</code>,
 the <code>forecast</code>, the <code>cumulative</code> forecast of totals, the <code>trajectories</code>
-of the backtest (origins by horizons) and the fitted <code>params</code>;</p></li>
+of the backtest (origins by horizons) and the fitted <code>params</code>; an
+interval is <code>NA</code> at a horizon where every forecast of the backtest was
+zero;</p></li>
 <li><p><code>origins</code>, <code>first_origin</code> (position of the first period forecast),
 <code>horizon</code>, <code>metric</code> and <code>levels</code>.</p></li>
 </ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="va">bt</span> <span class="op">&lt;-</span> <span class="fu">backtest</span><span class="op">(</span><span class="va">AirPassengers</span>, origins <span class="op">=</span> <span class="fl">24</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bt</span> <span class="op">&lt;-</span> <span class="fu">backtest</span><span class="op">(</span><span class="va">AirPassengers</span>, origins <span class="op">=</span> <span class="fl">24</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">bt</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;foresight backtest&gt; 12 candidates, 24 origins, 12 periods ahead</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chosen: mean(log_linear+log_arima_011_011) (MAPE 2.259)</span>
@@ -185,7 +191,6 @@ of the backtest (origins by horizons) and the fitted <code>params</code>;</p></l
 <span class="r-in"><span><span class="fu"><a href="total_forecast.html">total_forecast</a></span><span class="op">(</span><span class="va">bt</span>, <span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   periods     mean lower_80 upper_80 lower_95 upper_95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       6 2952.194 2891.163 2956.663 2880.515 3005.726</span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

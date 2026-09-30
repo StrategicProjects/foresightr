@@ -3,8 +3,10 @@
 `decompose_stl()` splits a series into trend, seasonal pattern and
 remainder by LOESS (Cleveland, Cleveland, McRae & Terpenning, 1990); its
 defaults are those of [`stats::stl()`](https://rdrr.io/r/stats/stl.html)
-and its numbers agree with it. `decompose_mstl()` applies STL in turn to
-each of several seasonal periods (Bandara, Hyndman & Bergmeir, 2021).
+and, without `robust`, so are its numbers (with `robust = TRUE` the two
+agree up to the eleventh robustness round and drift apart in the third
+digit after that). `decompose_mstl()` applies STL in turn to each of
+several seasonal periods (Bandara, Hyndman & Bergmeir, 2021).
 
 ## Usage
 
@@ -34,7 +36,7 @@ decompose_mstl(
 
 - y:
 
-  A `ts` or a numeric vector.
+  A `ts` or a numeric vector, longer than two full cycles.
 
 - period:
 
@@ -42,9 +44,10 @@ decompose_mstl(
 
 - seasonal_window:
 
-  The LOESS window over the cycles, an odd number of at least 7: the
-  smaller, the faster the pattern may change. `NULL` keeps the same
-  pattern in every cycle (`s.window = "periodic"`).
+  The LOESS window over the cycles, an odd number, usually 7 or more (an
+  even number is taken as the next odd one): the smaller, the faster the
+  pattern may change. `NULL` keeps the same pattern in every cycle
+  (`s.window = "periodic"`).
 
 - trend_window, low_pass_window:
 

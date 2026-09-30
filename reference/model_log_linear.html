@@ -62,7 +62,8 @@ dummies, brought back with Duan's smearing correction.</p>
 
 <dt id="arg-deflator">deflator<a class="anchor" aria-label="anchor" href="#arg-deflator"></a></dt>
 <dd><p>A price index to deflate by before fitting, one value per
-period of the series and of the horizon; the forecasts are inflated back.</p></dd>
+period from the first observation on. The future of the index is not
+read: the forecasts are inflated back at its growth over the last cycle.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -87,6 +88,13 @@ period of the series and of the horizon; the forecasts are inflated back.</p></d
 <code><a href="model_theta.html">model_theta()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="fit_model.html">forecast_model</a></span><span class="op">(</span><span class="fu">model_log_linear</span><span class="op">(</span>window <span class="op">=</span> <span class="fl">60</span><span class="op">)</span>, <span class="va">AirPassengers</span>, h <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Jan      Feb      Mar</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1961 444.6022 422.6663 483.5639</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

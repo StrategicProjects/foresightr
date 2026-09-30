@@ -18,6 +18,8 @@ Replay the past with several candidates and keep what would have worked.
 - [`candidates_default()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md)
   [`candidates_thorough()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md)
   : Ready sets of candidates
+- [`foresight_threads()`](https://strategicprojects.github.io/foresightr/reference/foresight_threads.md)
+  : Threads used by backtests and ensembles
 
 ## Fit and forecast
 

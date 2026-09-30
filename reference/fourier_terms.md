@@ -1,10 +1,11 @@
 # External variables for a regression with ARIMA errors
 
 `fourier_terms()` gives the sine and cosine pairs of a seasonal period
-up to `order` harmonics; `seasonal_dummies()` one dummy per season but
-the first. Both have `rows` rows, which must cover the series and the
-horizon to be forecast. Combine them, or add your own columns, with
-[`cbind()`](https://rdrr.io/r/base/cbind.html).
+up to `order` harmonics (those beyond half the period, which would
+repeat the earlier ones, are left out); `seasonal_dummies()` one dummy
+per season but the first. Both have `rows` rows, which must cover the
+series and the horizon to be forecast. Combine them, or add your own
+columns, with [`cbind()`](https://rdrr.io/r/base/cbind.html).
 
 ## Usage
 

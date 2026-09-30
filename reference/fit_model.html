@@ -94,10 +94,14 @@ a <code>ts</code> brings its own.</p></dd>
     <p><code>fit_model()</code>: an object of class <code>foresight_fit</code>, a list with the
 model name and description, the estimated <code>params</code> (named numeric),
 <code>log_likelihood</code>, <code>aic</code>, <code>aicc</code>, <code>bic</code> and <code>residuals</code> when the model has
-them (<code>NA</code> otherwise), and <code>details</code>: orders and coefficients for ARIMA,
-the code and smoothing for ETS, changepoints and event effects for
-Prophet, the structure for TBATS. <code>forecast_model()</code>: the forecasts, a
-<code>ts</code> when <code>y</code> is one.</p>
+them (<code>NA</code> otherwise; the residuals of ARIMA are those of the differenced
+series, so there are fewer of them than observations), and <code>details</code>:
+orders and coefficients for ARIMA, the code and smoothing for ETS,
+changepoints (positions from 1) and event effects for Prophet, the
+structure for TBATS and its <code>minus_two_log_likelihood</code> (up to a constant;
+the lower the better, as its AIC). <code>forecast_model()</code>: the forecasts, a
+<code>ts</code> when <code>y</code> is one. Both fail when a forecast is not finite, as when
+regressors do not reach the horizon.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

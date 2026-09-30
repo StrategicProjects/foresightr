@@ -71,10 +71,8 @@ Other models:
 ## Examples
 
 ``` r
-# \donttest{
 fit <- fit_model(model_ensemble(candidates_default(), top = 3), AirPassengers)
 fit$params
 #>      weight_holt_winters        weight_log_linear weight_log_arima_011_011 
 #>                0.4335252                0.3251547                0.2413201 
-# }
 ```

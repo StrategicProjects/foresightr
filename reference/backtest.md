@@ -35,8 +35,12 @@ backtest(
 
 - candidates:
 
-  A list of models; see
+  A list of models with distinct names (see
+  [`with_name()`](https://strategicprojects.github.io/foresightr/reference/with_name.md));
+  by default
   [`candidates_default()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md).
+  A candidate that cannot forecast at every origin and from the whole
+  series is left out, with a warning.
 
 - period:
 
@@ -57,17 +61,17 @@ backtest(
 
 - window:
 
-  Train on the last `window` observations only (default: everything
-  before the origin).
+  Train on the last `window` observations only, at every origin and for
+  the final forecast (default: everything before the origin).
 
 - combine:
 
-  Also evaluate the average of the best `combine` models (fewer than 2
-  disables it).
+  Also evaluate the average of the best `combine` models (fewer than 2,
+  or more than the candidates left, disables it).
 
 - levels:
 
-  Coverage of the intervals.
+  Coverage of the intervals, each above 0 and below 1.
 
 - metric:
 
@@ -75,14 +79,17 @@ backtest(
 
 - parallel:
 
-  Fit the origins on all cores. The result is the same either way.
+  Fit the origins on several threads: all cores, or as many as
+  [`foresight_threads()`](https://strategicprojects.github.io/foresightr/reference/foresight_threads.md)
+  allows. The result is the same either way.
 
 ## Value
 
 An object of class `foresight_backtest`, a list with
 
-- `ranking`: one row per candidate with its `score`, whether it was
-  `chosen`, the models involved and a description;
+- `ranking`: one row per candidate that went through the backtest, with
+  its `score`, whether it was `chosen`, the models involved and a
+  description; `dropped` names those left out;
 
 - `best`: the name of the chosen candidate;
 
@@ -92,7 +99,8 @@ An object of class `foresight_backtest`, a list with
   evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error `bands`,
   the `forecast`, the `cumulative` forecast of totals, the
   `trajectories` of the backtest (origins by horizons) and the fitted
-  `params`;
+  `params`; an interval is `NA` at a horizon where every forecast of the
+  backtest was zero;
 
 - `origins`, `first_origin` (position of the first period forecast),
   `horizon`, `metric` and `levels`.
@@ -100,7 +108,6 @@ An object of class `foresight_backtest`, a list with
 ## Examples
 
 ``` r
-# \donttest{
 bt <- backtest(AirPassengers, origins = 24)
 bt
 #> <foresight backtest> 12 candidates, 24 origins, 12 periods ahead
@@ -135,5 +142,4 @@ bt$forecast
 total_forecast(bt, 6)
 #>   periods     mean lower_80 upper_80 lower_95 upper_95
 #> 1       6 2952.194 2891.163 2956.663 2880.515 3005.726
-# }
 ```

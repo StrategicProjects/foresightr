@@ -41,7 +41,13 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="foresightr-010">foresightr 0.1.0<a class="anchor" aria-label="anchor" href="#foresightr-010"></a></h2>
-<ul><li>First version: R interface to the Rust crate foresight 0.7.1, with every model of the crate, the rolling-origin backtest with empirical intervals, STL and MSTL, cleaning, tests and accuracy measures.</li>
+<p>First release: R interface to the Rust crate foresight 0.7.3.</p>
+<ul><li>Models as specifications (<code>model_*()</code>): benchmarks, Theta, Holt-Winters, log-linear regression, seasonal ARIMA with regressors and automatic orders, exponential smoothing with automatic choice, a Prophet-style trend with events, TBATS, Croston with its variants, forecasts of the seasonally adjusted series, ensembles and Box-Cox scales.</li>
+<li>
+<code><a href="../reference/backtest.html">backtest()</a></code>: rolling origin on several threads (<code><a href="../reference/foresight_threads.html">foresight_threads()</a></code>), errors by horizon, the choice by out-of-sample error and empirical intervals by horizon and for totals (<code><a href="../reference/total_forecast.html">total_forecast()</a></code>).</li>
+<li>
+<code><a href="../reference/decompose_stl.html">decompose_stl()</a></code>, <code><a href="../reference/decompose_stl.html">decompose_mstl()</a></code>, <code><a href="../reference/fill_gaps.html">fill_gaps()</a></code>, <code><a href="../reference/fill_gaps.html">find_outliers()</a></code>, <code><a href="../reference/fill_gaps.html">clean_series()</a></code>, tests of stationarity and seasonality, accuracy measures.</li>
+<li>Charts with ggplot2: <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> and <code><a href="../reference/theme_foresight.html">theme_foresight()</a></code>.</li>
 </ul></div>
   </main></div>
 

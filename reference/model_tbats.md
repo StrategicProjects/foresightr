@@ -61,3 +61,15 @@ Other models:
 [`model_mean()`](https://strategicprojects.github.io/foresightr/reference/model_mean.md),
 [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+# a structure given in full fits at once; whatever is left out is chosen
+model <- model_tbats(harmonics = 3, box_cox = FALSE, trend = TRUE, damped = FALSE,
+                     arma_errors = FALSE)
+fit <- fit_model(model, log(AirPassengers))
+exp(predict(fit, 3))
+#>           Jan      Feb      Mar
+#> 1961 451.6791 469.9160 494.5989
+```

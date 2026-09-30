@@ -45,13 +45,13 @@
 <p>O <code>foresightr</code> ajusta vários modelos a uma série, refaz o passado para ver como cada um teria se saído, escolhe pelo erro fora da amostra e dá faixas tiradas dos erros de fato observados, inclusive para o total dos próximos k períodos.</p>
 <p>Os modelos, o backtest e as ferramentas são o crate Rust <a href="https://github.com/milkway/foresight" class="external-link">foresight</a>, compilado dentro do pacote: os números são os do crate e o backtest usa todos os núcleos. Os gráficos são feitos com ggplot2, a única dependência além do R base.</p>
 <p align="center">
-<img src="reference/figures/architecture.svg" alt="Arquitetura do foresight" width="100%"></p>
+<img src="https://raw.githubusercontent.com/StrategicProjects/foresightr/main/man/figures/architecture.svg" alt="Arquitetura do foresight" width="100%"></p>
 <p><strong>Site:</strong> <a href="https://strategicprojects.github.io/foresightr/" class="uri">https://strategicprojects.github.io/foresightr/</a></p>
 <div class="section level2">
 <h2 id="instalação">Instalação<a class="anchor" aria-label="anchor" href="#instala%C3%A7%C3%A3o"></a></h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"StrategicProjects/foresightr"</span><span class="op">)</span></span></code></pre></div>
-<p>A instalação pelo código-fonte compila o Rust e precisa dele (<a href="https://rustup.rs" class="external-link uri">https://rustup.rs</a>); no Windows, também do alvo GNU: <code>rustup target add x86_64-pc-windows-gnu</code>.</p>
+<p>A instalação pelo código-fonte compila o Rust e precisa dele (<a href="https://rustup.rs" class="external-link uri">https://rustup.rs</a>, versão 1.81 ou mais nova); no Windows, também do alvo GNU: <code>rustup target add x86_64-pc-windows-gnu</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="uso">Uso<a class="anchor" aria-label="anchor" href="#uso"></a></h2>

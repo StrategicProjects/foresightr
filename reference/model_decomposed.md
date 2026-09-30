@@ -47,3 +47,11 @@ Other models:
 [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md),
 [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+forecast_model(model_log(model_decomposed(model_drift())), AirPassengers, h = 3)
+#>           Jan      Feb      Mar
+#> 1961 446.7876 426.2122 491.8037
+```

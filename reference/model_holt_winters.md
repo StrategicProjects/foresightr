@@ -33,3 +33,11 @@ Other models:
 [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md),
 [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+fit_model(model_holt_winters(), AirPassengers)$params
+#>        alpha         beta        gamma          phi sse_relative 
+#>    0.3000000    0.0200000    0.8000000    1.0000000    0.2195894 
+```

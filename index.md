@@ -10,8 +10,11 @@ for the total of the next k periods.
 
 The models, the backtest and the utilities are the Rust crate
 [foresight](https://github.com/milkway/foresight), compiled into the
-package: the numbers are the crate’s and the backtest runs on all cores.
-Charts are drawn with ggplot2, the only dependency beyond base R.
+package: the numbers are the crate’s and the backtest runs on all cores
+(or as many as
+[`foresight_threads()`](https://strategicprojects.github.io/foresightr/reference/foresight_threads.md)
+allows). Charts are drawn with ggplot2, the only dependency beyond base
+R.
 
 ![Architecture: the Rust crate foresight holds every computation;
 foresightr (R, extendr) and pyforesight (Python, PyO3) call it;
@@ -30,8 +33,9 @@ remotes::install_github("StrategicProjects/foresightr")
 ```
 
 Installing from source compiles the Rust code, so it needs a Rust
-toolchain (<https://rustup.rs>); on Windows, also the GNU target:
-`rustup target add x86_64-pc-windows-gnu`.
+toolchain (<https://rustup.rs>, version 1.81 or later); on Windows, also
+the GNU target: `rustup target add x86_64-pc-windows-gnu`. The crates it
+depends on come with the package: nothing is downloaded.
 
 ## Use
 
@@ -88,7 +92,7 @@ backtest(y, c(candidates_thorough(),
 | Combinators | [`model_log()`](https://strategicprojects.github.io/foresightr/reference/model_box_cox.md), [`model_box_cox()`](https://strategicprojects.github.io/foresightr/reference/model_box_cox.md) (λ fixed or by Guerrero’s method), [`model_decomposed()`](https://strategicprojects.github.io/foresightr/reference/model_decomposed.md) (any model on the seasonally adjusted series), [`model_ensemble()`](https://strategicprojects.github.io/foresightr/reference/model_ensemble.md) (average, median, inverse error or stacked weights), [`with_name()`](https://strategicprojects.github.io/foresightr/reference/with_name.md) |
 | Candidates | [`candidates_default()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md) (11 models), [`candidates_thorough()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md) (18) |
 | Fitting | [`fit_model()`](https://strategicprojects.github.io/foresightr/reference/fit_model.md), [`predict()`](https://rdrr.io/r/stats/predict.html), [`forecast_model()`](https://strategicprojects.github.io/foresightr/reference/fit_model.md) |
-| Backtest | [`backtest()`](https://strategicprojects.github.io/foresightr/reference/backtest.md): rolling origin (expanding or fixed window) on all cores; MAPE, MAE, RMSE, MASE and bias by horizon; average of the best models; choice by out-of-sample error; empirical intervals by horizon and for totals ([`total_forecast()`](https://strategicprojects.github.io/foresightr/reference/total_forecast.md)) |
+| Backtest | [`backtest()`](https://strategicprojects.github.io/foresightr/reference/backtest.md), [`foresight_threads()`](https://strategicprojects.github.io/foresightr/reference/foresight_threads.md): rolling origin (expanding or fixed window) on all cores; MAPE, MAE, RMSE, MASE and bias by horizon; average of the best models; choice by out-of-sample error; empirical intervals by horizon and for totals ([`total_forecast()`](https://strategicprojects.github.io/foresightr/reference/total_forecast.md)) |
 | Decomposition | [`decompose_stl()`](https://strategicprojects.github.io/foresightr/reference/decompose_stl.md), [`decompose_mstl()`](https://strategicprojects.github.io/foresightr/reference/decompose_stl.md) |
 | Cleaning | [`fill_gaps()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md), [`find_outliers()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md), [`clean_series()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md) |
 | Tests and measures | [`kpss_statistic()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`n_differences()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`n_seasonal_differences()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`seasonal_strength()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`autocorrelations()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`box_cox()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`inv_box_cox()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`guerrero_lambda()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`mape()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`pct_bias()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`mae()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`rmse()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`mase()`](https://strategicprojects.github.io/foresightr/reference/mape.md) |

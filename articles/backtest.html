@@ -96,7 +96,9 @@ Nothing a model sees at an origin comes from after it.</p>
 <span><span class="co">#&gt; [1] 77</span></span></code></pre></div>
 <p>Series shorter than <code>min_train</code> plus the origins get fewer
 origins; <code>window</code> trains on the last observations only, for
-series whose behaviour changed.</p>
+series whose behaviour changed. A candidate that cannot forecast at
+every origin and from the whole series is left out, with a warning, and
+named in <code>bt$dropped</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="the-error-by-horizon">The error by horizon<a class="anchor" aria-label="anchor" href="#the-error-by-horizon"></a>

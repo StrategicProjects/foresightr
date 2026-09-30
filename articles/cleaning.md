@@ -9,9 +9,8 @@ library(foresightr)
 
 [`decompose_stl()`](https://strategicprojects.github.io/foresightr/reference/decompose_stl.md)
 splits a series into trend, seasonal pattern and remainder by LOESS. Its
-defaults are those of
-[`stats::stl()`](https://rdrr.io/r/stats/stl.html), and so are its
-numbers.
+defaults are those of [`stats::stl()`](https://rdrr.io/r/stats/stl.html)
+and, without `robust`, so are its numbers.
 
 ``` r
 

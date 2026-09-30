@@ -58,3 +58,11 @@ Other models:
 [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md),
 [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+demand <- c(0, 0, 3, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0)
+forecast_model(model_croston("sba"), demand, h = 3)
+#> [1] 0.8762393 0.8762393 0.8762393
+```

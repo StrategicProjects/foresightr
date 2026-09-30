@@ -42,7 +42,8 @@ model_prophet(
 - events:
 
   Named list: for each event, the positions where it happens, counted
-  from 1 at the first observation, future ones included.
+  from 1 at the first observation, future ones included. Seasonal terms
+  are fitted from two full cycles on.
 
 - steps:
 
@@ -72,3 +73,23 @@ Other models:
 [`model_mean()`](https://strategicprojects.github.io/foresightr/reference/model_mean.md),
 [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+# ten years of monthly sales with a campaign every other November (+20)
+# and a lasting change of level from the 81st month on (-15)
+t <- 1:120
+sales <- 200 + 0.8 * t + 5 * sin(2 * pi * t / 12)
+campaigns <- c(11, 35, 59, 83, 107)
+sales[campaigns] <- sales[campaigns] + 20
+sales[t >= 81] <- sales[t >= 81] - 15
+# the campaign planned for month 131 enters the forecast
+model <- model_prophet(changepoints = 0,
+                       events = list(campaign = c(campaigns, 131)),
+                       steps = list(new_law = 81))
+fit <- fit_model(model, ts(sales, frequency = 12))
+round(fit$details$effects, 1)
+#> campaign  new_law 
+#>       20      -15 
+```

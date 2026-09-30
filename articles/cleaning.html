@@ -80,7 +80,8 @@
 </h2>
 <p><code><a href="../reference/decompose_stl.html">decompose_stl()</a></code> splits a series into trend, seasonal
 pattern and remainder by LOESS. Its defaults are those of
-<code><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stats::stl()</a></code>, and so are its numbers.</p>
+<code><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stats::stl()</a></code> and, without <code>robust</code>, so are its
+numbers.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/decompose_stl.html">decompose_stl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, seasonal_window <span class="op">=</span> <span class="fl">13</span><span class="op">)</span></span>
 <span><span class="va">d</span></span>

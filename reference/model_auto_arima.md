@@ -62,3 +62,13 @@ Other models:
 [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md),
 [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+fit <- fit_model(model_auto_arima(), log(AirPassengers))
+fit$details$order
+#> [1] 0 1 1
+fit$details$seasonal_order
+#> [1] 0 1 1
+```

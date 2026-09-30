@@ -31,7 +31,9 @@ bt$first_origin   # position of the first period forecast
 
 Series shorter than `min_train` plus the origins get fewer origins;
 `window` trains on the last observations only, for series whose
-behaviour changed.
+behaviour changed. A candidate that cannot forecast at every origin and
+from the whole series is left out, with a warning, and named in
+`bt$dropped`.
 
 ## The error by horizon
 

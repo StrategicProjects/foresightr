@@ -17,8 +17,9 @@ model_log_linear(window = NULL, deflator = NULL)
 
 - deflator:
 
-  A price index to deflate by before fitting, one value per period of
-  the series and of the horizon; the forecasts are inflated back.
+  A price index to deflate by before fitting, one value per period from
+  the first observation on. The future of the index is not read: the
+  forecasts are inflated back at its growth over the last cycle.
 
 ## Value
 
@@ -43,3 +44,11 @@ Other models:
 [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md),
 [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md),
 [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md)
+
+## Examples
+
+``` r
+forecast_model(model_log_linear(window = 60), AirPassengers, h = 3)
+#>           Jan      Feb      Mar
+#> 1961 444.6022 422.6663 483.5639
+```

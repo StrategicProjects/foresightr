@@ -13,7 +13,8 @@ Os modelos, o backtest e as ferramentas são o crate Rust
 pacote: os números são os do crate e o backtest usa todos os núcleos. Os
 gráficos são feitos com ggplot2, a única dependência além do R base.
 
-![Arquitetura do foresight](reference/figures/architecture.svg)
+![Arquitetura do
+foresight](https://raw.githubusercontent.com/StrategicProjects/foresightr/main/man/figures/architecture.svg)
 
 **Site:** <https://strategicprojects.github.io/foresightr/>
 
@@ -25,8 +26,8 @@ remotes::install_github("StrategicProjects/foresightr")
 ```
 
 A instalação pelo código-fonte compila o Rust e precisa dele
-(<https://rustup.rs>); no Windows, também do alvo GNU:
-`rustup target add x86_64-pc-windows-gnu`.
+(<https://rustup.rs>, versão 1.81 ou mais nova); no Windows, também do
+alvo GNU: `rustup target add x86_64-pc-windows-gnu`.
 
 ## Uso
 

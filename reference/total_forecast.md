@@ -28,3 +28,15 @@ total_forecast(backtest, k, candidate = backtest$best)
 ## Value
 
 A one-row data frame: `periods`, `mean` and the bounds of each interval.
+
+## Examples
+
+``` r
+bt <- backtest(AirPassengers, list(model_theta(), model_seasonal_naive()), origins = 24)
+total_forecast(bt, 6)
+#>   periods     mean lower_80 upper_80 lower_95 upper_95
+#> 1       6 2858.902 2846.688   3117.8 2787.833 3252.246
+colSums(bt$forecast[1:6, c("mean", "lower_80", "upper_80")])  # wider, and wrong
+#>     mean lower_80 upper_80 
+#> 2858.902 2762.949 3155.645 
+```
