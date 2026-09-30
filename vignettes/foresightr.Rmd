@@ -19,6 +19,8 @@ with what was known then.
 library(foresightr)
 ```
 
+<img src="architecture.svg" alt="The Rust crate foresight does every computation; this package, the Python package pyforesight and Rust programs call it." style="width:100%" />
+
 ## The data
 
 Monthly ICMS, the main tax revenue of the Brazilian state of Piauí, from the
@@ -49,7 +51,7 @@ the errors it made in the backtest, horizon by horizon:
 
 ```{r}
 head(bt$forecast)
-plot(bt)
+autoplot(bt)
 ```
 
 The error of each candidate by horizon:
@@ -96,5 +98,5 @@ backtest(icms, mine, origins = 24, horizon = 6)$ranking[, c("name", "score")]
 ```{r}
 d <- decompose_stl(log(icms), seasonal_window = 13)
 d
-plot(d)
+autoplot(d)
 ```

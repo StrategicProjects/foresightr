@@ -172,35 +172,3 @@ print.foresight_backtest <- function(x, n = 10, ...) {
 
 #' @export
 as.data.frame.foresight_backtest <- function(x, ...) x$ranking
-
-#' Plot a backtest
-#'
-#' The last years of the series and the forecast of the chosen candidate
-#' with its widest interval.
-#'
-#' @param x A result of [backtest()].
-#' @param candidate A candidate name; by default the chosen one.
-#' @param history How many of the last observations to show.
-#' @param ... Passed to [plot()].
-#' @return `x`, invisibly.
-#' @export
-plot.foresight_backtest <- function(x, candidate = x$best, history = 48, ...) {
-  report <- x$candidates[[candidate]]
-  if (is.null(report)) abort("no candidate named ", candidate, ".")
-  y <- x$series$values
-  n <- length(y)
-  shown <- max(1, n - history + 1):n
-  tsp <- x$series$tsp
-  time <- if (is.null(tsp)) seq_len(n) else tsp[1] + (seq_len(n) - 1) / tsp[3]
-  ahead <- if (is.null(tsp)) n + report$forecast$horizon else report$forecast$time
-  level <- level_names(max(x$levels))
-  lower <- report$forecast[[paste0("lower_", level)]]
-  upper <- report$forecast[[paste0("upper_", level)]]
-  graphics::plot(c(time[shown], ahead), c(y[shown], rep(NA, length(ahead))),
-                 type = "l", ylim = range(y[shown], lower, upper, finite = TRUE),
-                 xlab = "", ylab = "", main = report$name, ...)
-  graphics::polygon(c(ahead, rev(ahead)), c(lower, rev(upper)),
-                    col = grDevices::adjustcolor("#4C6FFF", 0.2), border = NA)
-  graphics::lines(ahead, report$forecast$mean, col = "#4C6FFF", lwd = 2)
-  invisible(x)
-}

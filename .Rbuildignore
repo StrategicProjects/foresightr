@@ -12,3 +12,4 @@
 ^README\.pt-BR\.md$
 ^cran-comments\.md$
 ^\.DS_Store$
+^diagrams$

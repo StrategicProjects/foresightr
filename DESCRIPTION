@@ -30,8 +30,7 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.2)
 Imports:
-    graphics,
-    grDevices,
+    ggplot2 (>= 3.5.0),
     stats,
     utils
 Suggests:

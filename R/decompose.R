@@ -94,12 +94,3 @@ as.data.frame.foresight_decomposition <- function(x, ...) {
   data.frame(trend = as.numeric(x$trend), unclass(as.matrix(x$seasonal)),
              remainder = as.numeric(x$remainder))
 }
-
-#' @export
-plot.foresight_decomposition <- function(x, ...) {
-  parts <- cbind(data = x$seasonally_adjusted + rowSums(as.matrix(x$seasonal)),
-                 trend = x$trend, x$seasonal, remainder = x$remainder)
-  if (!stats::is.ts(parts)) parts <- stats::ts(parts)
-  graphics::plot(parts, main = "", ...)
-  invisible(x)
-}

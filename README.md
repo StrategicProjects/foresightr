@@ -14,8 +14,10 @@ next k periods.
 
 The models, the backtest and the utilities are the Rust crate
 [foresight](https://github.com/milkway/foresight), compiled into the package:
-the numbers are the crate's and the backtest runs on all cores. The R side
-has no dependencies beyond base R.
+the numbers are the crate's and the backtest runs on all cores. Charts are
+drawn with ggplot2, the only dependency beyond base R.
+
+<p align="center"><img src="man/figures/architecture.svg" alt="Architecture: the Rust crate foresight holds every computation; foresightr (R, extendr) and pyforesight (Python, PyO3) call it; foresight-go is an independent Go port checked against it." width="100%"></p>
 
 **Website:** <https://strategicprojects.github.io/foresightr/> ·
 [Português](https://github.com/StrategicProjects/foresightr/blob/main/README.pt-BR.md)
@@ -41,7 +43,8 @@ bt <- backtest(AirPassengers)
 bt                      # the ranking and the choice
 bt$forecast             # the forecast with 80% and 95% intervals
 total_forecast(bt, 6)   # the total of the next six months, with its own interval
-plot(bt)
+autoplot(bt)            # a ggplot: history, forecast and intervals
+autoplot(bt, "accuracy") # the error of the best candidates by horizon
 ```
 
 A `ts` brings its seasonal period and the season of its first observation;
@@ -86,8 +89,11 @@ backtest(y, c(candidates_thorough(),
 | Cleaning | `fill_gaps()`, `find_outliers()`, `clean_series()` |
 | Tests and measures | `kpss_statistic()`, `n_differences()`, `n_seasonal_differences()`, `seasonal_strength()`, `autocorrelations()`, `box_cox()`, `inv_box_cox()`, `guerrero_lambda()`, `mape()`, `pct_bias()`, `mae()`, `rmse()`, `mase()` |
 | Regressors | `fourier_terms()`, `seasonal_dummies()`, or any columns of your own |
+| Charts | `autoplot()` / `plot()` of a backtest (forecast, accuracy by horizon, ranking) or a decomposition, as ggplot objects; `theme_foresight()` |
 
 ## How it differs from the usual toolkits
+
+<p align="center"><img src="man/figures/backtest.svg" alt="How a model is chosen: every candidate is refitted at each origin and forecasts ahead; the errors by horizon rank the candidates and give the empirical intervals." width="100%"></p>
 
 Most forecasting packages choose a model by an in-sample information
 criterion and derive intervals from distributional assumptions. Here the

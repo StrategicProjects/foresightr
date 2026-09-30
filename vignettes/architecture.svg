@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" role="img" aria-labelledby="t d">
+  <title id="t">Architecture of foresight</title>
+  <desc id="d">The Rust crate foresight holds every model, the backtest, decomposition and cleaning. The R package foresightr (extendr) and the Python package pyforesight (PyO3) call it; Rust programs use it directly. foresight-go is an independent Go port checked against results recorded by the crate. The crate is checked against the R packages forecast and prophet.</desc>
+  <defs>
+    <marker id="tip" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5d6478"/>
+    </marker>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1eeff"/><stop offset="1" stop-color="#e9f8f4"/>
+    </linearGradient>
+  </defs>
+  <rect x="0.75" y="0.75" width="998.5" height="598.5" rx="18" fill="#ffffff" stroke="#d9deea" stroke-width="1.5"/>
+  <text x="40" y="52" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#1f2430" text-anchor="start" >How the packages fit together</text>
+  <text x="40" y="78" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#5d6478" text-anchor="start" >One implementation in Rust; R and Python call it, so the numbers are the same everywhere.</text>
+  <rect x="40" y="110" width="205" height="108" rx="12" fill="#ffffff" stroke="#d9deea" stroke-width="1.5"/>
+  <text x="58" y="140" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#5b43d6" text-anchor="start" letter-spacing="1.2">R</text>
+  <text x="58" y="164" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1f2430" text-anchor="start" >foresightr</text>
+  <text x="58" y="185" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#5d6478" text-anchor="start" >extendr · ts in, data frames out</text>
+  <text x="58" y="206" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="400" fill="#1f2430" text-anchor="start" >library(foresightr)</text>
+  <line x1="142.5" y1="218" x2="142.5" y2="262" stroke="#5d6478" stroke-width="1.8" marker-end="url(#tip)"/>
+  <rect x="265" y="110" width="205" height="108" rx="12" fill="#ffffff" stroke="#d9deea" stroke-width="1.5"/>
+  <text x="283" y="140" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#5b43d6" text-anchor="start" letter-spacing="1.2">PYTHON</text>
+  <text x="283" y="164" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1f2430" text-anchor="start" >pyforesight</text>
+  <text x="283" y="185" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#5d6478" text-anchor="start" >PyO3 · prebuilt wheels</text>
+  <text x="283" y="206" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="400" fill="#1f2430" text-anchor="start" >import foresight as fs</text>
+  <line x1="367.5" y1="218" x2="367.5" y2="262" stroke="#5d6478" stroke-width="1.8" marker-end="url(#tip)"/>
+  <rect x="490" y="110" width="205" height="108" rx="12" fill="#ffffff" stroke="#d9deea" stroke-width="1.5"/>
+  <text x="508" y="140" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#5b43d6" text-anchor="start" letter-spacing="1.2">RUST</text>
+  <text x="508" y="164" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1f2430" text-anchor="start" >foresight</text>
+  <text x="508" y="185" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#5d6478" text-anchor="start" >any Rust program</text>
+  <text x="508" y="206" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" font-weight="400" fill="#1f2430" text-anchor="start" >cargo add foresight</text>
+  <line x1="592.5" y1="218" x2="592.5" y2="262" stroke="#5d6478" stroke-width="1.8" marker-end="url(#tip)"/>
+  <rect x="735" y="110" width="225" height="108" rx="12" fill="#ffffff" stroke="#d9deea" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="753" y="140" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#1a9e84" text-anchor="start" letter-spacing="1.2">GO</text>
+  <text x="753" y="164" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1f2430" text-anchor="start" >foresight-go</text>
+  <text x="753" y="185" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#5d6478" text-anchor="start" >the same methods, rewritten</text>
+  <text x="753" y="204" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#5d6478" text-anchor="start" >in pure Go</text>
+  <line x1="847.5" y1="218" x2="847.5" y2="262" stroke="#5d6478" stroke-width="1.8" stroke-dasharray="5 5" marker-end="url(#tip)"/>
+  <text x="857.5" y="246" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#5d6478" text-anchor="start" >checked against it</text>
+  <rect x="40" y="262" width="920" height="220" rx="12" fill="url(#core)" stroke="#5b43d6" stroke-width="2"/>
+  <text x="62" y="298" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#1f2430" text-anchor="start" >foresight</text>
+  <text x="162" y="298" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#5d6478" text-anchor="start" >— the Rust crate: every computation, zero dependencies, deterministic</text>
+  <rect x="62.0" y="324" width="210.0" height="132" rx="10" fill="#ffffff" stroke="#d9deea" stroke-width="1.2"/>
+  <text x="78.0" y="354" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#5b43d6" text-anchor="start" >Models</text>
+  <text x="78.0" y="384" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >Naive · Theta · Holt-Winters</text>
+  <text x="78.0" y="406" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >ARIMA · ETS · Prophet · TBATS</text>
+  <text x="78.0" y="428" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >Croston · ensembles · Box-Cox</text>
+  <rect x="284.0" y="324" width="210.0" height="132" rx="10" fill="#ffffff" stroke="#d9deea" stroke-width="1.2"/>
+  <text x="300.0" y="354" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#1a9e84" text-anchor="start" >Backtest</text>
+  <text x="300.0" y="384" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >rolling origin on all cores</text>
+  <text x="300.0" y="406" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >error by horizon and the choice</text>
+  <text x="300.0" y="428" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >empirical intervals and totals</text>
+  <rect x="506.0" y="324" width="210.0" height="132" rx="10" fill="#ffffff" stroke="#d9deea" stroke-width="1.2"/>
+  <text x="522.0" y="354" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#5b43d6" text-anchor="start" >Decomposition</text>
+  <text x="522.0" y="384" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >STL and MSTL</text>
+  <text x="522.0" y="406" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >forecasts of the seasonally</text>
+  <text x="522.0" y="428" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >adjusted series</text>
+  <rect x="728.0" y="324" width="210.0" height="132" rx="10" fill="#ffffff" stroke="#d9deea" stroke-width="1.2"/>
+  <text x="744.0" y="354" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#5b43d6" text-anchor="start" >Cleaning and tests</text>
+  <text x="744.0" y="384" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >gaps and outliers</text>
+  <text x="744.0" y="406" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >KPSS · differences</text>
+  <text x="744.0" y="428" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#1f2430" text-anchor="start" >seasonal strength · accuracy</text>
+  <text x="40" y="522" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#5d6478" text-anchor="start" letter-spacing="1.2">CHECKED</text>
+  <text x="40" y="546" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1f2430" text-anchor="start" >Against the R packages forecast 9.0.2 and prophet 1.1.7 on public data, and in every package against the</text>
+  <text x="40" y="567" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#1f2430" text-anchor="start" >results recorded by the crate: likelihoods, forecasts, choices and intervals.</text>
+</svg>

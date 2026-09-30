@@ -21,6 +21,8 @@ fpe <- ts(data$fpe / 1e6, start = c(2017, 3), frequency = 12)
 
 ## Replaying the past
 
+<img src="backtest-diagram.svg" alt="How a model is chosen: replay the past, measure the errors, choose, and take the intervals from the errors." style="width:100%" />
+
 A rolling-origin backtest stands at each of the last `origins` periods of the
 series, fits every candidate on the data before that point only, and
 forecasts up to `horizon` periods ahead. Each forecast is compared with what
@@ -47,12 +49,20 @@ acc <- bt$candidates[[bt$best]]$accuracy
 acc[c(1, 3, 6, 12), ]
 ```
 
+```{r}
+autoplot(bt, "accuracy")
+```
+
 The ranking averages the chosen `metric` over the horizons. The last
 candidate is the simple average of the best `combine` models, often better
 than either:
 
 ```{r}
 bt$ranking[order(bt$ranking$score), c("name", "score")][1:5, ]
+```
+
+```{r, fig.height = 4.5}
+autoplot(bt, "ranking")
 ```
 
 Changing the metric changes the ranking only when models trade accuracy in
@@ -102,12 +112,16 @@ colSums(bt$forecast[1:6, c("mean", "lower_80", "upper_80")])
 
 ## Looking at it
 
+The charts are ggplot2 objects, drawn with `theme_foresight()`; they can be
+themed and annotated further.
+
 ```{r}
-plot(bt)
+autoplot(bt)
 ```
 
 Any candidate can be plotted or inspected by name:
 
 ```{r}
-plot(bt, candidate = "seasonal_naive")
+autoplot(bt, candidate = "seasonal_naive") +
+  ggplot2::labs(caption = "Source: Siconfi/STN, RREO Anexo 03")
 ```

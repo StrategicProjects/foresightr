@@ -66,3 +66,14 @@ test_that("accuracy measures", {
   expect_equal(inv_box_cox(box_cox(c(1, 2), 0.3), 0.3), c(1, 2))
   expect_error(mape(1:2, 1), "differ")
 })
+
+test_that("charts are ggplot objects", {
+  bt <- backtest(AirPassengers, list(model_theta(), model_seasonal_naive()), origins = 12,
+                 horizon = 6)
+  for (type in c("forecast", "accuracy", "ranking")) {
+    expect_s3_class(autoplot(bt, type), "ggplot")
+  }
+  expect_s3_class(autoplot(decompose_stl(log(AirPassengers))), "ggplot")
+  expect_s3_class(theme_foresight(), "theme")
+  expect_error(autoplot(bt, candidate = "nothing"), "no candidate")
+})

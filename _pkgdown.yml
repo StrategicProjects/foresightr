@@ -40,7 +40,8 @@ reference:
     contents:
       - backtest
       - total_forecast
-      - plot.foresight_backtest
+      - autoplot.foresight_backtest
+      - theme_foresight
       - candidates_default
   - title: "Fit and forecast"
     contents:

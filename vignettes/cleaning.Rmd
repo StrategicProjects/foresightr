@@ -23,7 +23,7 @@ by LOESS. Its defaults are those of `stats::stl()`, and so are its numbers.
 ```{r}
 d <- decompose_stl(log(AirPassengers), seasonal_window = 13)
 d
-plot(d)
+autoplot(d)
 ```
 
 The strengths, from 0 to 1, say how much of the variation the trend and the
@@ -42,7 +42,7 @@ daily <- 100 + 0.05 * t + weekly[t %% 7 + 1] + 8 * sin(2 * pi * t / 30) +
   2 * sin(t * 1.7) * cos(t * 0.3)
 d <- decompose_mstl(daily, periods = c(7, 30))
 d$seasonal_strength
-plot(d)
+autoplot(d)
 ```
 
 The same decomposition serves to forecast: `model_decomposed()` runs any model
