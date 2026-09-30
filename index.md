@@ -1,0 +1,129 @@
+# foresightr
+
+Time series forecasting in R that picks its model by what would have
+worked.
+
+`foresightr` fits several models to a series, replays the past to see
+how each would have done, chooses by out-of-sample error and reports
+intervals taken from the errors actually observed, including intervals
+for the total of the next k periods.
+
+The models, the backtest and the utilities are the Rust crate
+[foresight](https://github.com/milkway/foresight), compiled into the
+package: the numbers are the crate’s and the backtest runs on all cores.
+The R side has no dependencies beyond base R.
+
+**Website:** <https://strategicprojects.github.io/foresightr/> ·
+[Português](https://strategicprojects.github.io/foresightr/README.pt-BR.md)
+
+## Installation
+
+``` r
+
+# install.packages("remotes")
+remotes::install_github("StrategicProjects/foresightr")
+```
+
+Installing from source compiles the Rust code, so it needs a Rust
+toolchain (<https://rustup.rs>); on Windows, also the GNU target:
+`rustup target add x86_64-pc-windows-gnu`.
+
+## Use
+
+``` r
+
+library(foresightr)
+
+# replay the last 36 months, 12 months ahead, with 11 models
+bt <- backtest(AirPassengers)
+bt                      # the ranking and the choice
+bt$forecast             # the forecast with 80% and 95% intervals
+total_forecast(bt, 6)   # the total of the next six months, with its own interval
+plot(bt)
+```
+
+A `ts` brings its seasonal period and the season of its first
+observation; a plain vector needs `period =`.
+
+One model on its own:
+
+``` r
+
+fit <- fit_model(model_log(model_airline()), AirPassengers)
+predict(fit, h = 12)
+
+auto <- fit_model(model_auto_arima(), log(AirPassengers))
+auto$details$order; auto$details$seasonal_order; auto$aicc
+```
+
+A trend that bends, with dated events (positions from 1 at the first
+observation, future ones included):
+
+``` r
+
+model <- model_prophet(events = list(campaign = c(11, 35, 59, 83, 107, 131)),
+                       steps = list(new_law = 81))
+```
+
+Several models combined, and the wider set of candidates:
+
+``` r
+
+backtest(y, c(candidates_thorough(),
+              list(with_name(model_ensemble(candidates_default(), weighting = "stacked"),
+                             "my_ensemble"))))
+```
+
+## What is in it
+
+| Piece | What it does |
+|----|----|
+| Models | [`model_mean()`](https://strategicprojects.github.io/foresightr/reference/model_mean.md), [`model_naive()`](https://strategicprojects.github.io/foresightr/reference/model_mean.md), [`model_drift()`](https://strategicprojects.github.io/foresightr/reference/model_mean.md), [`model_seasonal_naive()`](https://strategicprojects.github.io/foresightr/reference/model_mean.md), [`model_theta()`](https://strategicprojects.github.io/foresightr/reference/model_theta.md), [`model_holt_winters()`](https://strategicprojects.github.io/foresightr/reference/model_holt_winters.md), [`model_log_linear()`](https://strategicprojects.github.io/foresightr/reference/model_log_linear.md) (optionally deflated by a price index), [`model_arima()`](https://strategicprojects.github.io/foresightr/reference/model_arima.md) and [`model_airline()`](https://strategicprojects.github.io/foresightr/reference/model_arima.md) (seasonal, exact maximum likelihood, optionally with regressors), [`model_auto_arima()`](https://strategicprojects.github.io/foresightr/reference/model_auto_arima.md), [`model_ets()`](https://strategicprojects.github.io/foresightr/reference/model_ets.md), [`model_auto_ets()`](https://strategicprojects.github.io/foresightr/reference/model_ets.md), [`model_prophet()`](https://strategicprojects.github.io/foresightr/reference/model_prophet.md) (changepoints, Fourier seasonality, events and steps), [`model_tbats()`](https://strategicprojects.github.io/foresightr/reference/model_tbats.md) (several seasonal periods, not necessarily whole numbers), [`model_croston()`](https://strategicprojects.github.io/foresightr/reference/model_croston.md) (with SBA and TSB) |
+| Combinators | [`model_log()`](https://strategicprojects.github.io/foresightr/reference/model_box_cox.md), [`model_box_cox()`](https://strategicprojects.github.io/foresightr/reference/model_box_cox.md) (λ fixed or by Guerrero’s method), [`model_decomposed()`](https://strategicprojects.github.io/foresightr/reference/model_decomposed.md) (any model on the seasonally adjusted series), [`model_ensemble()`](https://strategicprojects.github.io/foresightr/reference/model_ensemble.md) (average, median, inverse error or stacked weights), [`with_name()`](https://strategicprojects.github.io/foresightr/reference/with_name.md) |
+| Candidates | [`candidates_default()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md) (11 models), [`candidates_thorough()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md) (18) |
+| Fitting | [`fit_model()`](https://strategicprojects.github.io/foresightr/reference/fit_model.md), [`predict()`](https://rdrr.io/r/stats/predict.html), [`forecast_model()`](https://strategicprojects.github.io/foresightr/reference/fit_model.md) |
+| Backtest | [`backtest()`](https://strategicprojects.github.io/foresightr/reference/backtest.md): rolling origin (expanding or fixed window) on all cores; MAPE, MAE, RMSE, MASE and bias by horizon; average of the best models; choice by out-of-sample error; empirical intervals by horizon and for totals ([`total_forecast()`](https://strategicprojects.github.io/foresightr/reference/total_forecast.md)) |
+| Decomposition | [`decompose_stl()`](https://strategicprojects.github.io/foresightr/reference/decompose_stl.md), [`decompose_mstl()`](https://strategicprojects.github.io/foresightr/reference/decompose_stl.md) |
+| Cleaning | [`fill_gaps()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md), [`find_outliers()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md), [`clean_series()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md) |
+| Tests and measures | [`kpss_statistic()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`n_differences()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`n_seasonal_differences()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`seasonal_strength()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`autocorrelations()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`box_cox()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`inv_box_cox()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`guerrero_lambda()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`mape()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`pct_bias()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`mae()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`rmse()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`mase()`](https://strategicprojects.github.io/foresightr/reference/mape.md) |
+| Regressors | [`fourier_terms()`](https://strategicprojects.github.io/foresightr/reference/fourier_terms.md), [`seasonal_dummies()`](https://strategicprojects.github.io/foresightr/reference/fourier_terms.md), or any columns of your own |
+
+## How it differs from the usual toolkits
+
+Most forecasting packages choose a model by an in-sample information
+criterion and derive intervals from distributional assumptions. Here the
+choice and the intervals both come from forecasts made without seeing
+the future they are judged against. The interval for a total (say, the
+rest of a fiscal year) is measured on totals, because adding up monthly
+limits overstates its uncertainty.
+
+## Checked
+
+The package runs the Rust crate, so its numbers are the crate’s; the
+tests check that nothing is lost on the way, against results recorded by
+the crate: ARIMA, regression with ARIMA errors, ETS, Prophet, TBATS, STL
+and MSTL, Croston, cleaning, ensembles, tests of stationarity and
+seasonality, and the backtests of 11 and 18 candidates on three public
+series.
+[`decompose_stl()`](https://strategicprojects.github.io/foresightr/reference/decompose_stl.md)
+is also compared with
+[`stats::stl()`](https://rdrr.io/r/stats/stl.html). The crate itself is
+compared with the R packages `forecast` 9.0.2 and `prophet` 1.1.7; the
+same methods are available in Python
+([pyforesight](https://github.com/StrategicProjects/pyforesight)) and Go
+([foresight-go](https://github.com/milkway/foresight-go)).
+
+## Data
+
+`inst/extdata/piaui_revenue.csv` has the monthly ICMS and FPE revenue of
+the state of Piauí, Brazil (Siconfi/STN, with the IPCA price index from
+the Central Bank of Brazil):
+
+``` r
+
+read.csv(system.file("extdata", "piaui_revenue.csv", package = "foresightr"), comment.char = "#")
+```
+
+## License
+
+MIT.
