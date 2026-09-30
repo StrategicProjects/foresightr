@@ -41,7 +41,7 @@ checksum = "cb607e967cd5aa8da76836bc977007109aad7cdde086e39756d3da0f878a84d5"
 
 [[package]]
 name = "foresightr"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "extendr-api",
  "foresight",

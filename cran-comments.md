@@ -1,6 +1,14 @@
-## Submission
+## Resubmission
 
-This is a new submission.
+This is a resubmission of a new package. The pretest of 0.1.0 (30/09/2026)
+failed to install on Windows: after building the static library, the
+Makevars ran `cargo run --bin document` (a step of the rextendr template
+that regenerates the R wrappers), and that command could not execute its
+build scripts on the Windows check machine (os error 193). The wrappers
+already ship in `R/extendr-wrappers.R`, so 0.1.1 removes the step from both
+Makevars files: the installation now only builds the library.
+
+The spelling note lists names of authors and of methods.
 
 ## Test environments
 
