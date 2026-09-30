@@ -58,7 +58,8 @@ back.
 
 ``` r
 
-f <- forecast_model(model_decomposed(model_drift(), periods = c(7, 30)), daily, 14, period = 7)
+model <- model_decomposed(model_drift(), periods = c(7, 30))
+f <- forecast_model(model, daily, 14, period = 7)
 round(f, 1)
 #>  [1] 127.5 124.1 123.6 124.2 128.3 130.4 129.4 135.8 130.5 128.3 126.9 128.7
 #> [13] 128.5 125.4

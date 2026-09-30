@@ -3,9 +3,10 @@
 ``` r
 
 library(foresightr)
-data <- read.csv(system.file("extdata", "piaui_revenue.csv", package = "foresightr"),
-                 comment.char = "#")
-fpe <- ts(data$fpe / 1e6, start = c(2017, 3), frequency = 12)  # BRL million
+path <- system.file("extdata", "piaui_revenue.csv", package = "foresightr")
+data <- read.csv(path, comment.char = "#")
+# BRL million, monthly from March 2017
+fpe <- ts(data$fpe / 1e6, start = c(2017, 3), frequency = 12)
 ```
 
 ## Replaying the past
@@ -31,9 +32,11 @@ behaviour changed.
 
 ## The error by horizon
 
-Errors grow with the horizon. Each candidate keeps them one horizon at a
-time: the pairs evaluated, the mean absolute percentage error, the bias
-(positive when forecasts ran high), MAE, RMSE and MASE.
+Each candidate keeps its errors one horizon at a time: the pairs
+evaluated, the mean absolute percentage error, the bias (positive when
+forecasts ran high), MAE, RMSE and MASE. Errors usually grow with the
+horizon; for this series, dominated by a stable seasonal pattern, they
+hardly do.
 
 ``` r
 

@@ -17,9 +17,10 @@ the public fiscal reports (Siconfi/STN). The first observation is March
 
 ``` r
 
-data <- read.csv(system.file("extdata", "piaui_revenue.csv", package = "foresightr"),
-                 comment.char = "#")
-icms <- ts(data$icms / 1e6, start = c(2017, 3), frequency = 12)  # BRL million
+path <- system.file("extdata", "piaui_revenue.csv", package = "foresightr")
+data <- read.csv(path, comment.char = "#")
+# BRL million, monthly from March 2017
+icms <- ts(data$icms / 1e6, start = c(2017, 3), frequency = 12)
 ```
 
 ## Choose a model by what would have worked

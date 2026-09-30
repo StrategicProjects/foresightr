@@ -3,8 +3,8 @@
 ``` r
 
 library(foresightr)
-data <- read.csv(system.file("extdata", "piaui_revenue.csv", package = "foresightr"),
-                 comment.char = "#")
+path <- system.file("extdata", "piaui_revenue.csv", package = "foresightr")
+data <- read.csv(path, comment.char = "#")
 icms <- ts(data$icms / 1e6, start = c(2017, 3), frequency = 12)
 ```
 
@@ -72,7 +72,8 @@ the horizon:
 ``` r
 
 first_100 <- window(icms, end = time(icms)[100])
-forecast_model(model_log_linear(deflator = data$ipca_index[1:112]), first_100, 12)
+deflated <- model_log_linear(deflator = data$ipca_index[1:112])
+forecast_model(deflated, first_100, 12)
 #>           Jan      Feb      Mar      Apr      May      Jun      Jul      Aug
 #> 2025                                                       723.0007 735.2485
 #> 2026 800.9495 708.6957 651.4263 688.2408 684.8211 778.6687                  

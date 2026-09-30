@@ -75,9 +75,10 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/foresightr" class="external-link">foresightr</a></span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"piaui_revenue.csv"</span>, package <span class="op">=</span> <span class="st">"foresightr"</span><span class="op">)</span>,</span>
-<span>                 comment.char <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
-<span><span class="va">fpe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">fpe</span> <span class="op">/</span> <span class="fl">1e6</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">3</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>  <span class="co"># BRL million</span></span></code></pre></div>
+<span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"piaui_revenue.csv"</span>, package <span class="op">=</span> <span class="st">"foresightr"</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">path</span>, comment.char <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
+<span><span class="co"># BRL million, monthly from March 2017</span></span>
+<span><span class="va">fpe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/ts.html" class="external-link">ts</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">fpe</span> <span class="op">/</span> <span class="fl">1e6</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="fl">3</span><span class="op">)</span>, frequency <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="replaying-the-past">Replaying the past<a class="anchor" aria-label="anchor" href="#replaying-the-past"></a>
 </h2>
@@ -99,9 +100,11 @@ series whose behaviour changed.</p>
 <div class="section level2">
 <h2 id="the-error-by-horizon">The error by horizon<a class="anchor" aria-label="anchor" href="#the-error-by-horizon"></a>
 </h2>
-<p>Errors grow with the horizon. Each candidate keeps them one horizon
-at a time: the pairs evaluated, the mean absolute percentage error, the
-bias (positive when forecasts ran high), MAE, RMSE and MASE.</p>
+<p>Each candidate keeps its errors one horizon at a time: the pairs
+evaluated, the mean absolute percentage error, the bias (positive when
+forecasts ran high), MAE, RMSE and MASE. Errors usually grow with the
+horizon; for this series, dominated by a stable seasonal pattern, they
+hardly do.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">acc</span> <span class="op">&lt;-</span> <span class="va">bt</span><span class="op">$</span><span class="va">candidates</span><span class="op">[[</span><span class="va">bt</span><span class="op">$</span><span class="va">best</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">accuracy</span></span>
 <span><span class="va">acc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">12</span><span class="op">)</span>, <span class="op">]</span></span>
