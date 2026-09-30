@@ -58,7 +58,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/foresightr" class="external-link">foresightr</a></span><span class="op">)</span></span>
 <span><span class="va">bt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/backtest.html">backtest</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>   <span class="co"># 36 origens, 12 meses à frente, 11 modelos</span></span>
-<span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span>                     <span class="co"># previsão com faixas de 80% e 95%</span></span>
+<span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span>                     <span class="co"># um tibble: previsão com faixas de 80% e 95%</span></span>
 <span><span class="fu"><a href="reference/total_forecast.html">total_forecast</a></span><span class="op">(</span><span class="va">bt</span>, <span class="fl">6</span><span class="op">)</span>           <span class="co"># total dos próximos seis meses, com faixa própria</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span>                    <span class="co"># gráfico ggplot com histórico, previsão e faixas</span></span></code></pre></div>
 </div>

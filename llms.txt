@@ -46,7 +46,7 @@ library(foresightr)
 # replay the last 36 months, 12 months ahead, with 11 models
 bt <- backtest(AirPassengers)
 bt                      # the ranking and the choice
-bt$forecast             # the forecast with 80% and 95% intervals
+bt$forecast             # a tibble: the forecast with 80% and 95% intervals
 total_forecast(bt, 6)   # the total of the next six months, with its own interval
 autoplot(bt)            # a ggplot: history, forecast and intervals
 autoplot(bt, "accuracy") # the error of the best candidates by horizon

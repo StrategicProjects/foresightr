@@ -92,7 +92,7 @@
 <span><span class="co"># replay the last 36 months, 12 months ahead, with 11 models</span></span>
 <span><span class="va">bt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/backtest.html">backtest</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span></span>
 <span><span class="va">bt</span>                      <span class="co"># the ranking and the choice</span></span>
-<span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span>             <span class="co"># the forecast with 80% and 95% intervals</span></span>
+<span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span>             <span class="co"># a tibble: the forecast with 80% and 95% intervals</span></span>
 <span><span class="fu"><a href="reference/total_forecast.html">total_forecast</a></span><span class="op">(</span><span class="va">bt</span>, <span class="fl">6</span><span class="op">)</span>   <span class="co"># the total of the next six months, with its own interval</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span>            <span class="co"># a ggplot: history, forecast and intervals</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span>, <span class="st">"accuracy"</span><span class="op">)</span> <span class="co"># the error of the best candidates by horizon</span></span></code></pre></div>

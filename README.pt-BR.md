@@ -35,7 +35,7 @@ alvo GNU: `rustup target add x86_64-pc-windows-gnu`.
 
 library(foresightr)
 bt <- backtest(AirPassengers)   # 36 origens, 12 meses à frente, 11 modelos
-bt$forecast                     # previsão com faixas de 80% e 95%
+bt$forecast                     # um tibble: previsão com faixas de 80% e 95%
 total_forecast(bt, 6)           # total dos próximos seis meses, com faixa própria
 autoplot(bt)                    # gráfico ggplot com histórico, previsão e faixas
 ```
