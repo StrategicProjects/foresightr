@@ -1,0 +1,69 @@
+url: https://strategicprojects.github.io/foresightr/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#5b43d6"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+  components:
+    articles:
+      text: Articles
+      menu:
+        - text: The backtest and its intervals
+          href: articles/backtest.html
+        - text: The models
+          href: articles/models.html
+        - text: Regressors and events
+          href: articles/regressors.html
+        - text: Decomposition and cleaning
+          href: articles/cleaning.html
+    right: [search, github]
+
+home:
+  title: "foresightr: forecasts chosen by what would have worked"
+  sidebar:
+    structure: [links, license, citation, authors, dev]
+  links:
+    - text: Rust crate
+      href: https://github.com/milkway/foresight
+    - text: Python package
+      href: https://github.com/StrategicProjects/pyforesight
+
+reference:
+  - title: "Choose a model"
+    desc: "Replay the past with several candidates and keep what would have worked."
+    contents:
+      - backtest
+      - total_forecast
+      - plot.foresight_backtest
+      - candidates_default
+  - title: "Fit and forecast"
+    contents:
+      - fit_model
+  - title: "Models"
+    contents:
+      - has_concept("models")
+  - title: "Combine and transform models"
+    contents:
+      - model_box_cox
+      - model_decomposed
+      - model_ensemble
+      - with_name
+      - model_name
+  - title: "Decompose and clean"
+    contents:
+      - decompose_stl
+      - fill_gaps
+  - title: "Tests, measures and regressors"
+    contents:
+      - kpss_statistic
+      - mape
+      - fourier_terms
+  - title: "Package"
+    contents:
+      - foresightr-package

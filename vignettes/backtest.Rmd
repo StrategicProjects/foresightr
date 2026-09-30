@@ -1,0 +1,111 @@
+---
+title: "The backtest and its intervals"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The backtest and its intervals}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4)
+```
+
+```{r}
+library(foresightr)
+data <- read.csv(system.file("extdata", "piaui_revenue.csv", package = "foresightr"),
+                 comment.char = "#")
+fpe <- ts(data$fpe / 1e6, start = c(2017, 3), frequency = 12)  # BRL million
+```
+
+## Replaying the past
+
+A rolling-origin backtest stands at each of the last `origins` periods of the
+series, fits every candidate on the data before that point only, and
+forecasts up to `horizon` periods ahead. Each forecast is compared with what
+actually happened. Nothing a model sees at an origin comes from after it.
+
+```{r}
+bt <- backtest(fpe, origins = 36, horizon = 12)
+bt$origins
+bt$first_origin   # position of the first period forecast
+```
+
+Series shorter than `min_train` plus the origins get fewer origins; `window`
+trains on the last observations only, for series whose behaviour changed.
+
+## The error by horizon
+
+Errors grow with the horizon. Each candidate keeps them one horizon at a time:
+the pairs evaluated, the mean absolute percentage error, the bias (positive
+when forecasts ran high), MAE, RMSE and MASE.
+
+```{r}
+acc <- bt$candidates[[bt$best]]$accuracy
+acc[c(1, 3, 6, 12), ]
+```
+
+The ranking averages the chosen `metric` over the horizons. The last
+candidate is the simple average of the best `combine` models, often better
+than either:
+
+```{r}
+bt$ranking[order(bt$ranking$score), c("name", "score")][1:5, ]
+```
+
+Changing the metric changes the ranking only when models trade accuracy in
+different ways; `"mase"` scales the errors by the seasonal naive error of each
+training set, which makes series of different sizes comparable.
+
+## Intervals from the errors actually made
+
+An interval here is not derived from a distribution. At each horizon, the
+backtest collects the relative errors `actual / forecast - 1` of the
+candidate and takes their quantiles: the 80% interval goes from the 10% to the
+90% quantile. The bands are kept in relative terms and applied to the final
+forecast.
+
+```{r}
+bt$candidates[[bt$best]]$bands[c(1, 6, 12), ]
+bt$forecast[c(1, 6, 12), ]
+```
+
+With 36 origins, the 95% bounds rest on few errors at long horizons; they are
+honest about the past but not smooth. More origins give steadier bands, at the
+cost of judging models on older data.
+
+The trajectories of the backtest are kept, one row per origin, should you want
+another summary of them:
+
+```{r}
+dim(bt$candidates[[bt$best]]$trajectories)
+```
+
+## Totals
+
+Budgets are about totals: the revenue of the rest of the year, not of each
+month. The backtest also measures the error of the sum of the first k periods,
+so the total gets its own interval:
+
+```{r}
+total_forecast(bt, 6)
+```
+
+Adding up the six monthly bounds would overstate the uncertainty: monthly
+errors partly cancel in a sum.
+
+```{r}
+colSums(bt$forecast[1:6, c("mean", "lower_80", "upper_80")])
+```
+
+## Looking at it
+
+```{r}
+plot(bt)
+```
+
+Any candidate can be plotted or inspected by name:
+
+```{r}
+plot(bt, candidate = "seasonal_naive")
+```

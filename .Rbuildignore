@@ -1,0 +1,14 @@
+^src/\.cargo$
+^src/rust/vendor$
+^src/rust/target$
+^src/Makevars$
+^src/Makevars\.win$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
+^CLAUDE\.md$
+^\.claude$
+^README\.pt-BR\.md$
+^cran-comments\.md$
+^\.DS_Store$

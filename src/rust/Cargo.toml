@@ -1,0 +1,22 @@
+[package]
+name = 'foresightr'
+publish = false
+version = '0.1.0'
+edition = '2021'
+rust-version = '1.80'
+
+[lib]
+crate-type = [ 'rlib', 'staticlib' ]
+name = 'foresightr'
+
+[[bin]]
+name = 'document'
+path = 'document.rs'
+
+[dependencies]
+extendr-api = '0.9'
+fs = { package = 'foresight', version = '=0.7.1' }
+
+[profile.release]
+lto = true
+codegen-units = 1

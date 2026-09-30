@@ -1,0 +1,132 @@
+---
+title: "The models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4)
+```
+
+```{r}
+library(foresightr)
+y <- AirPassengers
+```
+
+Every model is a specification: a small list that says what to fit. It can be
+printed, saved, renamed and combined; it is estimated only by `fit_model()`,
+`forecast_model()` or inside a `backtest()`.
+
+```{r}
+model_log(model_airline())
+```
+
+## Yardsticks
+
+`model_naive()`, `model_drift()`, `model_mean()` and `model_seasonal_naive()`
+are what any other model must beat. The seasonal naive forecast with
+`growth = TRUE` repeats last year scaled by the growth of the last twelve
+months, a strong benchmark for revenue.
+
+```{r}
+forecast_model(model_seasonal_naive(growth = TRUE), y, 6)
+```
+
+## Theta and Holt-Winters
+
+`model_theta()` is the method that won the M3 competition, equivalent to
+simple exponential smoothing with drift, on the seasonally adjusted series.
+`model_holt_winters()` smooths level, trend and a multiplicative seasonal
+pattern.
+
+```{r}
+fit_model(model_holt_winters(), y)$params
+```
+
+## Exponential smoothing
+
+`model_ets()` fits one member of the family by its code (error, trend,
+season); `model_auto_ets()` chooses by AICc among those that suit the series.
+
+```{r}
+fit <- fit_model(model_auto_ets(), y)
+fit$details$code
+fit$details[c("alpha", "beta", "gamma")]
+```
+
+## ARIMA
+
+`model_arima()` is estimated by exact maximum likelihood.
+`model_auto_arima()` chooses the differences by tests and the orders by a
+stepwise search.
+
+```{r}
+fit <- fit_model(model_auto_arima(), log(y))
+c(fit$details$order, fit$details$seasonal_order)
+fit$aicc
+exp(predict(fit, 6))
+```
+
+## Prophet-style trend
+
+`model_prophet()` fits a trend that may bend at many places, shrinking the
+bends that do not matter to exactly zero, plus Fourier seasonality:
+
+```{r}
+fit <- fit_model(model_prophet(), log(y))
+fit$details$changepoints
+```
+
+Events and lasting steps are covered in `vignette("regressors")`.
+
+## TBATS
+
+`model_tbats()` handles several seasonal periods, including periods that are
+not whole numbers (52.18 weeks in a year), with trigonometric terms. Whatever
+is not fixed is chosen by AIC, which takes seconds.
+
+```{r}
+fit <- fit_model(model_tbats(), y)
+fit$details[c("harmonics", "lambda", "trend", "arma")]
+```
+
+## Intermittent demand
+
+For series where most periods have no demand, the forecast is a rate:
+Croston's method and its SBA and TSB variants.
+
+```{r}
+demand <- c(0, 0, 3, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0)
+forecast_model(model_croston("sba"), demand, 3)
+```
+
+## Combining models
+
+Any model can run on the log or Box-Cox scale, and on the seasonally adjusted
+series:
+
+```{r}
+model_name(model_log(model_decomposed(model_auto_ets())))
+forecast_model(model_box_cox(model_theta(), "guerrero"), y, 3)
+```
+
+An ensemble learns its weights from its members' errors on the end of the
+series; with `"stacked"` weights, members that add nothing get exactly zero.
+
+```{r}
+fit <- fit_model(model_ensemble(candidates_default(), weighting = "stacked"), y)
+round(fit$params[fit$params > 0], 3)
+```
+
+## The ready sets
+
+```{r}
+vapply(candidates_default(), model_name, "")
+length(candidates_thorough())
+```
+
+`candidates_thorough()` adds the automatic choices and two ensembles, and
+takes seconds rather than milliseconds in a backtest.

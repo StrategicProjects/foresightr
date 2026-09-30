@@ -1,0 +1,99 @@
+---
+title: "Get started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4)
+```
+
+A model that fits the past well can still forecast badly. `foresightr` chooses
+models the other way round: it replays the past, and at each point forecasts
+with what was known then.
+
+```{r}
+library(foresightr)
+```
+
+## The data
+
+Monthly ICMS, the main tax revenue of the Brazilian state of Piauí, from the
+public fiscal reports (Siconfi/STN). The first observation is March 2017.
+
+```{r}
+data <- read.csv(system.file("extdata", "piaui_revenue.csv", package = "foresightr"),
+                 comment.char = "#")
+icms <- ts(data$icms / 1e6, start = c(2017, 3), frequency = 12)  # BRL million
+```
+
+## Choose a model by what would have worked
+
+`backtest()` refits every candidate at each of the last 36 months, using only
+the data before it, and forecasts up to 12 months ahead. The candidates are
+ranked by their mean absolute percentage error, the average of the best two is
+added as one more candidate, and the best of all forecasts from the whole
+series.
+
+```{r}
+bt <- backtest(icms)
+bt
+```
+
+The forecast of the chosen candidate, with intervals that are quantiles of
+the errors it made in the backtest, horizon by horizon:
+
+```{r}
+head(bt$forecast)
+plot(bt)
+```
+
+The error of each candidate by horizon:
+
+```{r}
+head(bt$candidates[[bt$best]]$accuracy)
+```
+
+## Totals
+
+The total of the next six months has its own interval, measured on totals in
+the backtest. Adding up the monthly limits would give a wider and wrong
+interval, because the errors of successive months partly cancel.
+
+```{r}
+total_forecast(bt, 6)
+```
+
+## One model on its own
+
+```{r}
+fit <- fit_model(model_auto_arima(), log(icms))
+fit$details$order
+fit$details$seasonal_order
+exp(predict(fit, 6))
+```
+
+## Your own candidates
+
+Any list of models works, renamed as you like; ensembles learn their weights
+again at every origin of the backtest.
+
+```{r}
+mine <- list(
+  with_name(model_seasonal_naive(), "same_month"),
+  model_log(model_airline()),
+  model_ensemble(candidates_default(), weighting = "stacked")
+)
+backtest(icms, mine, origins = 24, horizon = 6)$ranking[, c("name", "score")]
+```
+
+## Decomposition
+
+```{r}
+d <- decompose_stl(log(icms), seasonal_window = 13)
+d
+plot(d)
+```
