@@ -62,8 +62,8 @@ Os números são os do crate Rust, conferido com os pacotes `forecast` e
 
 ## Autores
 
-André Leite, Marcos Wasiliew, Hugo Vasconcelos, Carlos Amorim e Diogo
-Bezerra.
+André Leite, Marcos Wasiliew, Hugo Vasconcelos, Carlos Amorim, Diogo
+Bezerra e Júlia Nascimento Barreto.
 
 ## Licença
 

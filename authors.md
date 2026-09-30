@@ -14,6 +14,9 @@
 
 - **Diogo Bezerra**. Author. [](https://orcid.org/0000-0002-1216-8674)
 
+- **Júlia Nascimento Barreto**. Author.
+  [](https://orcid.org/0009-0004-2851-7770)
+
 - **The authors of the dependency Rust crates**. Contributor.  
   see inst/AUTHORS file for details
 
@@ -22,13 +25,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/StrategicProjects/foresightr/blob/main/DESCRIPTION)
 
-Leite A, Wasiliew M, Vasconcelos H, Amorim C, Bezerra D (2026).
-*foresightr: Forecasts Chosen by What Would Have Worked*. R package
-version 0.1.0, <https://github.com/StrategicProjects/foresightr>.
+Leite A, Wasiliew M, Vasconcelos H, Amorim C, Bezerra D, Nascimento
+Barreto J (2026). *foresightr: Forecasts Chosen by What Would Have
+Worked*. R package version 0.1.0,
+<https://github.com/StrategicProjects/foresightr>.
 
     @Manual{,
       title = {foresightr: Forecasts Chosen by What Would Have Worked},
-      author = {André Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra},
+      author = {André Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra and Júlia {Nascimento Barreto}},
       year = {2026},
       note = {R package version 0.1.0},
       url = {https://github.com/StrategicProjects/foresightr},
