@@ -90,6 +90,10 @@ further.
 ``` r
 bt <- backtest(AirPassengers, origins = 24)
 autoplot(bt)
+#> Warning: Removed 12 rows containing missing values or values outside the scale range
+#> (`geom_line()`).
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
 
 autoplot(bt, "accuracy")
 

@@ -28,8 +28,9 @@ clean_series(y, period = NULL)
 ## Value
 
 `fill_gaps()` and `clean_series()`: the series, a `ts` when `y` is one.
-`find_outliers()`: a data frame with the `index` (from 1), the `value`
-and its `replacement`, plus the `time` for a `ts`.
+`find_outliers()`: a tibble with the `index` (from 1), the `value` and
+its `replacement`, plus the `time` for a `ts` (a date for monthly and
+quarterly data).
 
 ## Examples
 
@@ -38,12 +39,14 @@ y <- log(AirPassengers)
 y[c(30, 100)] <- y[c(30, 100)] + c(0.8, -0.7)
 y[60] <- NA
 find_outliers(y)
-#>   index     time    value replacement
-#> 1    30 1951.417 5.981784    5.224249
-#> 2    52 1953.250 5.459586    5.428944
-#> 3    62 1954.083 5.236442    5.304042
-#> 4   100 1957.250 5.152202    5.853691
-#> 5   135 1960.167 6.037871    6.140060
+#> # A tibble: 5 × 4
+#>   index time       value replacement
+#>   <int> <date>     <dbl>       <dbl>
+#> 1    30 1951-06-01  5.98        5.22
+#> 2    52 1953-04-01  5.46        5.43
+#> 3    62 1954-02-01  5.24        5.30
+#> 4   100 1957-04-01  5.15        5.85
+#> 5   135 1960-03-01  6.04        6.14
 clean_series(y)[c(30, 60, 100)]
 #> [1] 5.224249 5.300749 5.853691
 ```

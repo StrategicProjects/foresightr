@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">foresightr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,11 +130,13 @@ adjusted series and adds the patterns back.</p>
 <span><span class="va">y</span><span class="op">[</span><span class="fl">100</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">[</span><span class="fl">100</span><span class="op">]</span> <span class="op">-</span> <span class="fl">0.7</span>   <span class="co"># a strike</span></span>
 <span><span class="va">y</span><span class="op">[</span><span class="fl">61</span><span class="op">:</span><span class="fl">62</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>           <span class="co"># months never recorded</span></span>
 <span><span class="fu"><a href="../reference/fill_gaps.html">find_outliers</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   index     time    value replacement</span></span>
-<span><span class="co">#&gt; 1    30 1951.417 5.981784    5.217194</span></span>
-<span><span class="co">#&gt; 2    52 1953.250 5.459586    5.430423</span></span>
-<span><span class="co">#&gt; 3   100 1957.250 5.152202    5.855171</span></span>
-<span><span class="co">#&gt; 4   135 1960.167 6.037871    6.146164</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
+<span><span class="co">#&gt;   index time       value replacement</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>    30 1951-06-01  5.98        5.22</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>    52 1953-04-01  5.46        5.43</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>   100 1957-04-01  5.15        5.86</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>   135 1960-03-01  6.04        6.15</span></span></code></pre></div>
 <p><code><a href="../reference/fill_gaps.html">fill_gaps()</a></code> fills the missing values following the
 seasonal pattern; <code><a href="../reference/fill_gaps.html">clean_series()</a></code> also replaces the
 outliers:</p>

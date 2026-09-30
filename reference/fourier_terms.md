@@ -31,7 +31,7 @@ seasonal_dummies(period, rows)
 
 ## Value
 
-A data frame.
+A tibble.
 
 ## Examples
 

@@ -21,7 +21,7 @@ the forecast of the next k periods together."><meta property="og:image" content=
 
     <a class="navbar-brand me-2" href="../index.html">foresightr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,11 +140,14 @@ as <code><a href="foresight_threads.html">foresight_threads()</a></code> allows.
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code>foresight_backtest</code>, a list with</p><ul><li><p><code>ranking</code>: one row per candidate that went through the backtest, with
+    <p>An object of class <code>foresight_backtest</code>, a list whose tables are
+tibbles:</p><ul><li><p><code>ranking</code>: one row per candidate that went through the backtest, with
 its <code>score</code>, whether it was <code>chosen</code>, the models involved and a
 description; <code>dropped</code> names those left out;</p></li>
 <li><p><code>best</code>: the name of the chosen candidate;</p></li>
-<li><p><code>forecast</code>: the forecast of the chosen candidate with its intervals;</p></li>
+<li><p><code>forecast</code>: the forecast of the chosen candidate with its intervals,
+and the <code>time</code> of each period for a <code>ts</code> (a date for monthly and
+quarterly data);</p></li>
 <li><p><code>candidates</code>: for each candidate, its <code>accuracy</code> by horizon (pairs
 evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error <code>bands</code>,
 the <code>forecast</code>, the <code>cumulative</code> forecast of totals, the <code>trajectories</code>
@@ -175,22 +178,26 @@ zero;</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10                     seasonal_naive 10.793</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ... and 2 more</span>
 <span class="r-in"><span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    horizon     time     mean lower_80 upper_80 lower_95 upper_95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1 1961.000 451.1629 435.5788 459.4081 420.0576 469.5416</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2 1961.083 428.1173 417.0759 436.6258 399.5738 442.3360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3 1961.167 485.8424 475.9508 492.8912 453.1669 494.5819</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4 1961.250 492.6722 480.0743 501.4043 461.2832 508.0285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5 1961.333 507.8313 495.8102 515.9807 473.7930 520.5540</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6 1961.417 586.5683 569.3894 596.4046 546.8936 601.9106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7 1961.500 669.8282 649.0314 689.1857 620.1254 695.6713</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8 1961.583 666.0720 642.9016 675.4146 617.8694 688.3249</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9 1961.667 561.9431 541.8380 572.2993 521.2817 574.8883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10 1961.750 497.1960 477.4047 510.4216 456.5302 511.7094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      11 1961.833 431.5305 411.4508 444.1681 397.7149 447.2060</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12      12 1961.917 481.0408 457.4564 492.6139 443.9095 498.7222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    horizon time        mean lower_80 upper_80 lower_95 upper_95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>       1 1961-01-01  451.     436.     459.     420.     470.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>       2 1961-02-01  428.     417.     437.     400.     442.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>       3 1961-03-01  486.     476.     493.     453.     495.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>       4 1961-04-01  493.     480.     501.     461.     508.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>       5 1961-05-01  508.     496.     516.     474.     521.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>       6 1961-06-01  587.     569.     596.     547.     602.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>       7 1961-07-01  670.     649.     689.     620.     696.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>       8 1961-08-01  666.     643.     675.     618.     688.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>       9 1961-09-01  562.     542.     572.     521.     575.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      10 1961-10-01  497.     477.     510.     457.     512.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span>      11 1961-11-01  432.     411.     444.     398.     447.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span>      12 1961-12-01  481.     457.     493.     444.     499.</span>
 <span class="r-in"><span><span class="fu"><a href="total_forecast.html">total_forecast</a></span><span class="op">(</span><span class="va">bt</span>, <span class="fl">6</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   periods     mean lower_80 upper_80 lower_95 upper_95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       6 2952.194 2891.163 2956.663 2880.515 3005.726</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   periods  mean lower_80 upper_80 lower_95 upper_95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>       6 <span style="text-decoration: underline;">2</span>952.    <span style="text-decoration: underline;">2</span>891.    <span style="text-decoration: underline;">2</span>957.    <span style="text-decoration: underline;">2</span>881.    <span style="text-decoration: underline;">3</span>006.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

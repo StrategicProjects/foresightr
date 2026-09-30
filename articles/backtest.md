@@ -47,11 +47,13 @@ hardly do.
 
 acc <- bt$candidates[[bt$best]]$accuracy
 acc[c(1, 3, 6, 12), ]
-#>    horizon  n     mape          bias      mae     rmse      mase
-#> 1        1 36 5.218180  0.4834240850 34.97901 44.61399 0.5426601
-#> 3        3 34 5.266489 -0.0008762147 36.77655 45.48067 0.5716142
-#> 6        6 31 4.709801 -0.5143452008 34.38851 43.18587 0.5344773
-#> 12      12 25 5.069807 -0.4405582622 34.28807 40.99345 0.5336450
+#> # A tibble: 4 × 7
+#>   horizon     n  mape      bias   mae  rmse  mase
+#>     <int> <dbl> <dbl>     <dbl> <dbl> <dbl> <dbl>
+#> 1       1    36  5.22  0.483     35.0  44.6 0.543
+#> 2       3    34  5.27 -0.000876  36.8  45.5 0.572
+#> 3       6    31  4.71 -0.514     34.4  43.2 0.534
+#> 4      12    25  5.07 -0.441     34.3  41.0 0.534
 ```
 
 ``` r
@@ -68,12 +70,14 @@ better than either:
 ``` r
 
 bt$ranking[order(bt$ranking$score), c("name", "score")][1:5, ]
-#>                                     name    score
-#> 12 mean(log_arima_011_011+arima_011_011) 5.201558
-#> 9                      log_arima_011_011 5.272317
-#> 8                          arima_011_011 5.607081
-#> 4                  seasonal_naive_growth 5.833625
-#> 11                           log_prophet 6.111936
+#> # A tibble: 5 × 2
+#>   name                                  score
+#>   <chr>                                 <dbl>
+#> 1 mean(log_arima_011_011+arima_011_011)  5.20
+#> 2 log_arima_011_011                      5.27
+#> 3 arima_011_011                          5.61
+#> 4 seasonal_naive_growth                  5.83
+#> 5 log_prophet                            6.11
 ```
 
 ``` r
@@ -99,15 +103,19 @@ the final forecast.
 ``` r
 
 bt$candidates[[bt$best]]$bands[c(1, 6, 12), ]
-#>    horizon    lower_80   upper_80    lower_95  upper_95
-#> 1        1 -0.08813160 0.07495426 -0.13956212 0.1102469
-#> 6        6 -0.06366508 0.08119672 -0.08318208 0.1324175
-#> 12      12 -0.06836198 0.08381365 -0.09594299 0.1382616
+#> # A tibble: 3 × 5
+#>   horizon lower_80 upper_80 lower_95 upper_95
+#>     <int>    <dbl>    <dbl>    <dbl>    <dbl>
+#> 1       1  -0.0881   0.0750  -0.140     0.110
+#> 2       6  -0.0637   0.0812  -0.0832    0.132
+#> 3      12  -0.0684   0.0838  -0.0959    0.138
 bt$forecast[c(1, 6, 12), ]
-#>    horizon     time      mean lower_80  upper_80 lower_95 upper_95
-#> 1        1 2026.500  623.6271 568.6658  670.3706 536.5924  692.380
-#> 6        6 2026.917  995.0369 931.6878 1075.8306 912.2676 1126.797
-#> 12      12 2027.417 1036.9406 966.0533 1123.8504 937.4534 1180.310
+#> # A tibble: 3 × 7
+#>   horizon time        mean lower_80 upper_80 lower_95 upper_95
+#>     <int> <date>     <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#> 1       1 2026-07-01  624.     569.     670.     537.     692.
+#> 2       6 2026-12-01  995.     932.    1076.     912.    1127.
+#> 3      12 2027-06-01 1037.     966.    1124.     937.    1180.
 ```
 
 With 36 origins, the 95% bounds rest on few errors at long horizons;
@@ -132,8 +140,10 @@ k periods, so the total gets its own interval:
 ``` r
 
 total_forecast(bt, 6)
-#>   periods     mean lower_80 upper_80 lower_95 upper_95
-#> 1       6 4631.779 4486.398 4910.636 4271.149 4923.313
+#> # A tibble: 1 × 6
+#>   periods  mean lower_80 upper_80 lower_95 upper_95
+#>     <int> <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#> 1       6 4632.    4486.    4911.    4271.    4923.
 ```
 
 Adding up the six monthly bounds would overstate the uncertainty:
@@ -155,6 +165,10 @@ they can be themed and annotated further.
 ``` r
 
 autoplot(bt)
+#> Warning: Removed 12 rows containing missing values or values outside the scale range
+#> (`geom_line()`).
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
 ```
 
 ![](backtest_files/figure-html/unnamed-chunk-12-1.png)
@@ -165,6 +179,10 @@ Any candidate can be plotted or inspected by name:
 
 autoplot(bt, candidate = "seasonal_naive") +
   ggplot2::labs(caption = "Source: Siconfi/STN, RREO Anexo 03")
+#> Warning: Removed 12 rows containing missing values or values outside the scale range
+#> (`geom_line()`).
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
 ```
 
 ![](backtest_files/figure-html/unnamed-chunk-13-1.png)

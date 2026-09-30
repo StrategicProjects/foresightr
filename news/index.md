@@ -1,5 +1,21 @@
 # Changelog
 
+## foresightr 0.1.1
+
+- The installation no longer runs a Rust binary to regenerate the R
+  wrappers, which ship with the package: that step failed on CRAN’s
+  Windows pretest.
+- Tables are tibbles: the `ranking`, `forecast`, `cumulative`,
+  `accuracy` and `bands` of a backtest,
+  [`total_forecast()`](https://strategicprojects.github.io/foresightr/reference/total_forecast.md),
+  [`find_outliers()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md),
+  [`fourier_terms()`](https://strategicprojects.github.io/foresightr/reference/fourier_terms.md)
+  and
+  [`seasonal_dummies()`](https://strategicprojects.github.io/foresightr/reference/fourier_terms.md).
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html) on a
+  backtest still gives a plain data frame. The `time` column of
+  forecasts and outliers is a date for monthly and quarterly series.
+
 ## foresightr 0.1.0
 
 First release: R interface to the Rust crate foresight 0.7.3.

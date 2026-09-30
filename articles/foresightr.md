@@ -62,14 +62,20 @@ of the errors it made in the backtest, horizon by horizon:
 ``` r
 
 head(bt$forecast)
-#>   horizon     time     mean lower_80 upper_80 lower_95 upper_95
-#> 1       1 2026.500 808.7847 769.5044 851.5913 736.8256 866.9912
-#> 2       2 2026.583 820.3222 770.5018 878.9813 761.8516 894.4362
-#> 3       3 2026.667 824.3435 785.6634 880.5138 779.0537 894.0897
-#> 4       4 2026.750 846.9183 802.2410 907.6957 793.4335 920.1498
-#> 5       5 2026.833 845.9071 811.9032 894.3556 785.9314 925.1126
-#> 6       6 2026.917 874.5325 831.2537 929.7832 815.2608 939.4974
+#> # A tibble: 6 × 7
+#>   horizon time        mean lower_80 upper_80 lower_95 upper_95
+#>     <int> <date>     <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#> 1       1 2026-07-01  809.     770.     852.     737.     867.
+#> 2       2 2026-08-01  820.     771.     879.     762.     894.
+#> 3       3 2026-09-01  824.     786.     881.     779.     894.
+#> 4       4 2026-10-01  847.     802.     908.     793.     920.
+#> 5       5 2026-11-01  846.     812.     894.     786.     925.
+#> 6       6 2026-12-01  875.     831.     930.     815.     939.
 autoplot(bt)
+#> Warning: Removed 12 rows containing missing values or values outside the scale range
+#> (`geom_line()`).
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
 ```
 
 ![](foresightr_files/figure-html/unnamed-chunk-5-1.png)
@@ -79,13 +85,15 @@ The error of each candidate by horizon:
 ``` r
 
 head(bt$candidates[[bt$best]]$accuracy)
-#>   horizon  n     mape       bias      mae     rmse      mase
-#> 1       1 36 3.533275 -0.1807961 23.80781 28.58104 0.3668870
-#> 2       2 35 3.607359 -0.3744145 24.22882 30.64350 0.3742738
-#> 3       3 34 3.541903 -0.4923517 24.05555 29.64415 0.3716752
-#> 4       4 33 3.305940 -0.6916501 23.09730 29.89687 0.3577268
-#> 5       5 32 3.423529 -1.0062653 23.77651 29.91922 0.3682181
-#> 6       6 31 3.633728 -1.0319047 25.08311 30.95968 0.3898493
+#> # A tibble: 6 × 7
+#>   horizon     n  mape   bias   mae  rmse  mase
+#>     <int> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
+#> 1       1    36  3.53 -0.181  23.8  28.6 0.367
+#> 2       2    35  3.61 -0.374  24.2  30.6 0.374
+#> 3       3    34  3.54 -0.492  24.1  29.6 0.372
+#> 4       4    33  3.31 -0.692  23.1  29.9 0.358
+#> 5       5    32  3.42 -1.01   23.8  29.9 0.368
+#> 6       6    31  3.63 -1.03   25.1  31.0 0.390
 ```
 
 ## Totals
@@ -98,8 +106,10 @@ cancel.
 ``` r
 
 total_forecast(bt, 6)
-#>   periods     mean lower_80 upper_80 lower_95 upper_95
-#> 1       6 5020.808 4879.802 5248.267 4866.549 5339.277
+#> # A tibble: 1 × 6
+#>   periods  mean lower_80 upper_80 lower_95 upper_95
+#>     <int> <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#> 1       6 5021.    4880.    5248.    4867.    5339.
 ```
 
 ## One model on its own
@@ -129,11 +139,13 @@ mine <- list(
   model_ensemble(candidates_default(), weighting = "stacked")
 )
 backtest(icms, mine, origins = 24, horizon = 6)$ranking[, c("name", "score")]
-#>                                       name    score
-#> 1                               same_month 9.927648
-#> 2                        log_arima_011_011 4.288811
-#> 3                         ensemble_stacked 3.881882
-#> 4 mean(ensemble_stacked+log_arima_011_011) 3.644656
+#> # A tibble: 4 × 2
+#>   name                                     score
+#>   <chr>                                    <dbl>
+#> 1 same_month                                9.93
+#> 2 log_arima_011_011                         4.29
+#> 3 ensemble_stacked                          3.88
+#> 4 mean(ensemble_stacked+log_arima_011_011)  3.64
 ```
 
 ## Decomposition

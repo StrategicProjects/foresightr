@@ -85,7 +85,8 @@ backtest(
 
 ## Value
 
-An object of class `foresight_backtest`, a list with
+An object of class `foresight_backtest`, a list whose tables are
+tibbles:
 
 - `ranking`: one row per candidate that went through the backtest, with
   its `score`, whether it was `chosen`, the models involved and a
@@ -93,7 +94,9 @@ An object of class `foresight_backtest`, a list with
 
 - `best`: the name of the chosen candidate;
 
-- `forecast`: the forecast of the chosen candidate with its intervals;
+- `forecast`: the forecast of the chosen candidate with its intervals,
+  and the `time` of each period for a `ts` (a date for monthly and
+  quarterly data);
 
 - `candidates`: for each candidate, its `accuracy` by horizon (pairs
   evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error `bands`,
@@ -126,20 +129,24 @@ bt
 #> 10                     seasonal_naive 10.793
 #> ... and 2 more
 bt$forecast
-#>    horizon     time     mean lower_80 upper_80 lower_95 upper_95
-#> 1        1 1961.000 451.1629 435.5788 459.4081 420.0576 469.5416
-#> 2        2 1961.083 428.1173 417.0759 436.6258 399.5738 442.3360
-#> 3        3 1961.167 485.8424 475.9508 492.8912 453.1669 494.5819
-#> 4        4 1961.250 492.6722 480.0743 501.4043 461.2832 508.0285
-#> 5        5 1961.333 507.8313 495.8102 515.9807 473.7930 520.5540
-#> 6        6 1961.417 586.5683 569.3894 596.4046 546.8936 601.9106
-#> 7        7 1961.500 669.8282 649.0314 689.1857 620.1254 695.6713
-#> 8        8 1961.583 666.0720 642.9016 675.4146 617.8694 688.3249
-#> 9        9 1961.667 561.9431 541.8380 572.2993 521.2817 574.8883
-#> 10      10 1961.750 497.1960 477.4047 510.4216 456.5302 511.7094
-#> 11      11 1961.833 431.5305 411.4508 444.1681 397.7149 447.2060
-#> 12      12 1961.917 481.0408 457.4564 492.6139 443.9095 498.7222
+#> # A tibble: 12 × 7
+#>    horizon time        mean lower_80 upper_80 lower_95 upper_95
+#>      <int> <date>     <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#>  1       1 1961-01-01  451.     436.     459.     420.     470.
+#>  2       2 1961-02-01  428.     417.     437.     400.     442.
+#>  3       3 1961-03-01  486.     476.     493.     453.     495.
+#>  4       4 1961-04-01  493.     480.     501.     461.     508.
+#>  5       5 1961-05-01  508.     496.     516.     474.     521.
+#>  6       6 1961-06-01  587.     569.     596.     547.     602.
+#>  7       7 1961-07-01  670.     649.     689.     620.     696.
+#>  8       8 1961-08-01  666.     643.     675.     618.     688.
+#>  9       9 1961-09-01  562.     542.     572.     521.     575.
+#> 10      10 1961-10-01  497.     477.     510.     457.     512.
+#> 11      11 1961-11-01  432.     411.     444.     398.     447.
+#> 12      12 1961-12-01  481.     457.     493.     444.     499.
 total_forecast(bt, 6)
-#>   periods     mean lower_80 upper_80 lower_95 upper_95
-#> 1       6 2952.194 2891.163 2956.663 2880.515 3005.726
+#> # A tibble: 1 × 6
+#>   periods  mean lower_80 upper_80 lower_95 upper_95
+#>     <int> <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+#> 1       6 2952.    2891.    2957.    2881.    3006.
 ```

@@ -13,7 +13,7 @@ clean_series() does both."><meta property="og:image" content="https://strategicp
 
     <a class="navbar-brand me-2" href="../index.html">foresightr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,8 +77,9 @@ trend and the season suggest, and what they should rather be.
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>fill_gaps()</code> and <code>clean_series()</code>: the series, a <code>ts</code> when <code>y</code> is
-one. <code>find_outliers()</code>: a data frame with the <code>index</code> (from 1), the
-<code>value</code> and its <code>replacement</code>, plus the <code>time</code> for a <code>ts</code>.</p>
+one. <code>find_outliers()</code>: a tibble with the <code>index</code> (from 1), the
+<code>value</code> and its <code>replacement</code>, plus the <code>time</code> for a <code>ts</code> (a date for
+monthly and quarterly data).</p>
     </div>
 
     <div class="section level2">
@@ -87,12 +88,14 @@ one. <code>find_outliers()</code>: a data frame with the <code>index</code> (fro
 <span class="r-in"><span><span class="va">y</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="op">-</span><span class="fl">0.7</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">y</span><span class="op">[</span><span class="fl">60</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu">find_outliers</span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   index     time    value replacement</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    30 1951.417 5.981784    5.224249</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    52 1953.250 5.459586    5.428944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    62 1954.083 5.236442    5.304042</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   100 1957.250 5.152202    5.853691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   135 1960.167 6.037871    6.140060</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   index time       value replacement</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>    30 1951-06-01  5.98        5.22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>    52 1953-04-01  5.46        5.43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>    62 1954-02-01  5.24        5.30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>   100 1957-04-01  5.15        5.85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>   135 1960-03-01  6.04        6.14</span>
 <span class="r-in"><span><span class="fu">clean_series</span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">100</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.224249 5.300749 5.853691</span>
 </code></pre></div>

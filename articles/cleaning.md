@@ -73,11 +73,13 @@ y[30] <- y[30] + 0.8     # a typing error
 y[100] <- y[100] - 0.7   # a strike
 y[61:62] <- NA           # months never recorded
 find_outliers(y)
-#>   index     time    value replacement
-#> 1    30 1951.417 5.981784    5.217194
-#> 2    52 1953.250 5.459586    5.430423
-#> 3   100 1957.250 5.152202    5.855171
-#> 4   135 1960.167 6.037871    6.146164
+#> # A tibble: 4 × 4
+#>   index time       value replacement
+#>   <int> <date>     <dbl>       <dbl>
+#> 1    30 1951-06-01  5.98        5.22
+#> 2    52 1953-04-01  5.46        5.43
+#> 3   100 1957-04-01  5.15        5.86
+#> 4   135 1960-03-01  6.04        6.15
 ```
 
 [`fill_gaps()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md)

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">foresightr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,25 +121,33 @@ the best of all forecasts from the whole series.</p>
 quantiles of the errors it made in the backtest, horizon by horizon:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   horizon     time     mean lower_80 upper_80 lower_95 upper_95</span></span>
-<span><span class="co">#&gt; 1       1 2026.500 808.7847 769.5044 851.5913 736.8256 866.9912</span></span>
-<span><span class="co">#&gt; 2       2 2026.583 820.3222 770.5018 878.9813 761.8516 894.4362</span></span>
-<span><span class="co">#&gt; 3       3 2026.667 824.3435 785.6634 880.5138 779.0537 894.0897</span></span>
-<span><span class="co">#&gt; 4       4 2026.750 846.9183 802.2410 907.6957 793.4335 920.1498</span></span>
-<span><span class="co">#&gt; 5       5 2026.833 845.9071 811.9032 894.3556 785.9314 925.1126</span></span>
-<span><span class="co">#&gt; 6       6 2026.917 874.5325 831.2537 929.7832 815.2608 939.4974</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<span><span class="co">#&gt;   horizon time        mean lower_80 upper_80 lower_95 upper_95</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1 2026-07-01  809.     770.     852.     737.     867.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2 2026-08-01  820.     771.     879.     762.     894.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3 2026-09-01  824.     786.     881.     779.     894.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4 2026-10-01  847.     802.     908.     793.     920.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5 2026-11-01  846.     812.     894.     786.     925.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>       6 2026-12-01  875.     831.     930.     815.     939.</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Removed 12 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span>
+<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span></code></pre></div>
 <p><img src="foresightr_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="672"></p>
 <p>The error of each candidate by horizon:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bt</span><span class="op">$</span><span class="va">candidates</span><span class="op">[[</span><span class="va">bt</span><span class="op">$</span><span class="va">best</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">accuracy</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   horizon  n     mape       bias      mae     rmse      mase</span></span>
-<span><span class="co">#&gt; 1       1 36 3.533275 -0.1807961 23.80781 28.58104 0.3668870</span></span>
-<span><span class="co">#&gt; 2       2 35 3.607359 -0.3744145 24.22882 30.64350 0.3742738</span></span>
-<span><span class="co">#&gt; 3       3 34 3.541903 -0.4923517 24.05555 29.64415 0.3716752</span></span>
-<span><span class="co">#&gt; 4       4 33 3.305940 -0.6916501 23.09730 29.89687 0.3577268</span></span>
-<span><span class="co">#&gt; 5       5 32 3.423529 -1.0062653 23.77651 29.91922 0.3682181</span></span>
-<span><span class="co">#&gt; 6       6 31 3.633728 -1.0319047 25.08311 30.95968 0.3898493</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<span><span class="co">#&gt;   horizon     n  mape   bias   mae  rmse  mase</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       1    36  3.53 -<span style="color: #BB0000;">0.181</span>  23.8  28.6 0.367</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       2    35  3.61 -<span style="color: #BB0000;">0.374</span>  24.2  30.6 0.374</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       3    34  3.54 -<span style="color: #BB0000;">0.492</span>  24.1  29.6 0.372</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>       4    33  3.31 -<span style="color: #BB0000;">0.692</span>  23.1  29.9 0.358</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       5    32  3.42 -<span style="color: #BB0000;">1.01</span>   23.8  29.9 0.368</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>       6    31  3.63 -<span style="color: #BB0000;">1.03</span>   25.1  31.0 0.390</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="totals">Totals<a class="anchor" aria-label="anchor" href="#totals"></a>
@@ -150,8 +158,10 @@ and wrong interval, because the errors of successive months partly
 cancel.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/total_forecast.html">total_forecast</a></span><span class="op">(</span><span class="va">bt</span>, <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   periods     mean lower_80 upper_80 lower_95 upper_95</span></span>
-<span><span class="co">#&gt; 1       6 5020.808 4879.802 5248.267 4866.549 5339.277</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   periods  mean lower_80 upper_80 lower_95 upper_95</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       6 <span style="text-decoration: underline;">5</span>021.    <span style="text-decoration: underline;">4</span>880.    <span style="text-decoration: underline;">5</span>248.    <span style="text-decoration: underline;">4</span>867.    <span style="text-decoration: underline;">5</span>339.</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="one-model-on-its-own">One model on its own<a class="anchor" aria-label="anchor" href="#one-model-on-its-own"></a>
@@ -178,11 +188,13 @@ weights again at every origin of the backtest.</p>
 <span>  <span class="fu"><a href="../reference/model_ensemble.html">model_ensemble</a></span><span class="op">(</span><span class="fu"><a href="../reference/candidates_default.html">candidates_default</a></span><span class="op">(</span><span class="op">)</span>, weighting <span class="op">=</span> <span class="st">"stacked"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/backtest.html">backtest</a></span><span class="op">(</span><span class="va">icms</span>, <span class="va">mine</span>, origins <span class="op">=</span> <span class="fl">24</span>, horizon <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">$</span><span class="va">ranking</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"score"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt;                                       name    score</span></span>
-<span><span class="co">#&gt; 1                               same_month 9.927648</span></span>
-<span><span class="co">#&gt; 2                        log_arima_011_011 4.288811</span></span>
-<span><span class="co">#&gt; 3                         ensemble_stacked 3.881882</span></span>
-<span><span class="co">#&gt; 4 mean(ensemble_stacked+log_arima_011_011) 3.644656</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   name                                     score</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> same_month                                9.93</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> log_arima_011_011                         4.29</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ensemble_stacked                          3.88</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> mean(ensemble_stacked+log_arima_011_011)  3.64</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="decomposition">Decomposition<a class="anchor" aria-label="anchor" href="#decomposition"></a>
