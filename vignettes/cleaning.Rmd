@@ -49,7 +49,8 @@ The same decomposition serves to forecast: `model_decomposed()` runs any model
 on the seasonally adjusted series and adds the patterns back.
 
 ```{r}
-f <- forecast_model(model_decomposed(model_drift(), periods = c(7, 30)), daily, 14, period = 7)
+model <- model_decomposed(model_drift(), periods = c(7, 30))
+f <- forecast_model(model, daily, 14, period = 7)
 round(f, 1)
 ```
 

@@ -18,7 +18,7 @@ the numbers are the crate's and the backtest runs on all cores. The R side
 has no dependencies beyond base R.
 
 **Website:** <https://strategicprojects.github.io/foresightr/> ·
-[Português](README.pt-BR.md)
+[Português](https://github.com/StrategicProjects/foresightr/blob/main/README.pt-BR.md)
 
 ## Installation
 
