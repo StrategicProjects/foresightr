@@ -5,3 +5,5 @@ CLAUDE.md
 .Rhistory
 .DS_Store
 docs/
+# configurações locais do Claude Code
+.claude/
