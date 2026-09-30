@@ -13,6 +13,8 @@ The spelling note lists names of authors and of methods.
 ## Test environments
 
 * local: macOS 15 (aarch64), R 4.6.0, rustc 1.97.0
+* win-builder, R-devel (2026-09-29 r90598): 0.1.1 installs and checks with
+  the spelling note only
 * GitHub Actions: macOS (release), Windows (release), Ubuntu (devel, release,
   oldrel-1), rustc 1.98.1
 * rustc 1.81.0 (the oldest version the package declares): builds and passes

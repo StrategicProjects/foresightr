@@ -8,8 +8,9 @@
 #' @param y A `ts` or a numeric vector, possibly with `NA`.
 #' @param period The seasonal period, when `y` is a plain vector.
 #' @return `fill_gaps()` and `clean_series()`: the series, a `ts` when `y` is
-#'   one. `find_outliers()`: a data frame with the `index` (from 1), the
-#'   `value` and its `replacement`, plus the `time` for a `ts`.
+#'   one. `find_outliers()`: a tibble with the `index` (from 1), the
+#'   `value` and its `replacement`, plus the `time` for a `ts` (a date for
+#'   monthly and quarterly data).
 #' @examples
 #' y <- log(AirPassengers)
 #' y[c(30, 100)] <- y[c(30, 100)] + c(0.8, -0.7)
@@ -27,9 +28,10 @@ fill_gaps <- function(y, period = NULL) {
 find_outliers <- function(y, period = NULL) {
   series <- as_series(y, period, missing = TRUE)
   raw <- rs_outliers(series$values, series$period)
-  out <- data.frame(index = raw$index, value = raw$value, replacement = raw$replacement)
+  out <- tibble::tibble(index = as.integer(raw$index), value = raw$value,
+                        replacement = raw$replacement)
   if (!is.null(series$tsp)) {
-    out$time <- series$tsp[1] + (out$index - 1) / series$tsp[3]
+    out$time <- as_time(series$tsp[1] + (out$index - 1) / series$tsp[3], series$tsp[3])
     out <- out[c("index", "time", "value", "replacement")]
   }
   out
@@ -176,7 +178,7 @@ accuracy_of <- function(actual, forecast, measure) {
 #'   terms).
 #' @param order Harmonics.
 #' @param rows Rows: the length of the series plus the horizon.
-#' @return A data frame.
+#' @return A tibble.
 #' @examples
 #' x <- fourier_terms(12, 3, length(AirPassengers) + 12)
 #' fit <- fit_model(model_arima(c(1, 1, 1), constant = TRUE, regressors = x), log(AirPassengers))
@@ -185,15 +187,15 @@ accuracy_of <- function(actual, forecast, measure) {
 fourier_terms <- function(period, order, rows) {
   period <- check_number(period, "period")
   if (period <= 1) abort("`period` must be above 1.")
-  as.data.frame(rs_fourier(period, check_count(order, "order", min = 1, max = 1000),
-                           check_count(rows, "rows", min = 1, max = 1e7)))
+  tibble::as_tibble(rs_fourier(period, check_count(order, "order", min = 1, max = 1000),
+                               check_count(rows, "rows", min = 1, max = 1e7)))
 }
 
 #' @rdname fourier_terms
 #' @export
 seasonal_dummies <- function(period, rows) {
-  as.data.frame(rs_seasonal_dummies(check_count(period, "period", min = 2, max = 1000),
-                                    check_count(rows, "rows", min = 1, max = 1e7)))
+  tibble::as_tibble(rs_seasonal_dummies(check_count(period, "period", min = 2, max = 1000),
+                                        check_count(rows, "rows", min = 1, max = 1e7)))
 }
 
 as_regressors <- function(x) {

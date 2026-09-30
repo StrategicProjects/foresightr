@@ -28,12 +28,15 @@
 #' @param metric `"mape"`, `"mae"`, `"rmse"` or `"mase"`.
 #' @param parallel Fit the origins on several threads: all cores, or as many
 #'   as [foresight_threads()] allows. The result is the same either way.
-#' @return An object of class `foresight_backtest`, a list with
+#' @return An object of class `foresight_backtest`, a list whose tables are
+#'   tibbles:
 #'   * `ranking`: one row per candidate that went through the backtest, with
 #'     its `score`, whether it was `chosen`, the models involved and a
 #'     description; `dropped` names those left out;
 #'   * `best`: the name of the chosen candidate;
-#'   * `forecast`: the forecast of the chosen candidate with its intervals;
+#'   * `forecast`: the forecast of the chosen candidate with its intervals,
+#'     and the `time` of each period for a `ts` (a date for monthly and
+#'     quarterly data);
 #'   * `candidates`: for each candidate, its `accuracy` by horizon (pairs
 #'     evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error `bands`,
 #'     the `forecast`, the `cumulative` forecast of totals, the `trajectories`
@@ -89,13 +92,12 @@ backtest <- function(y, candidates = candidates_default(), period = NULL, origin
   }
   reports <- stats::setNames(lapply(raw$candidates, candidate_report, raw = raw, series = series),
                              names_)
-  ranking <- data.frame(
+  ranking <- tibble::tibble(
     name = names_,
     score = vapply(raw$candidates, function(c) c$score, 0),
     chosen = seq_along(names_) == raw$chosen,
     components = vapply(raw$candidates, function(c) paste(c$components, collapse = " + "), ""),
-    description = vapply(raw$candidates, function(c) c$description, ""),
-    stringsAsFactors = FALSE
+    description = vapply(raw$candidates, function(c) c$description, "")
   )
   structure(list(
     ranking = ranking,
@@ -132,14 +134,16 @@ candidate_report <- function(c, raw, series) {
   times <- times_after(length(c$mean), series)
   forecast <- data.frame(horizon = seq_along(c$mean))
   if (!is.null(times)) forecast$time <- times
-  forecast <- cbind(forecast, interval_columns(c$mean, c$lower, c$upper, levels,
-                                               length(c$mean)))
-  cumulative <- cbind(data.frame(periods = seq_along(c$cumulative_mean)),
-                      interval_columns(c$cumulative_mean, c$cumulative_lower,
-                                       c$cumulative_upper, levels, length(c$cumulative_mean)))
+  forecast <- tibble::as_tibble(cbind(forecast, interval_columns(c$mean, c$lower, c$upper,
+                                                                 levels, length(c$mean))))
+  cumulative <- tibble::as_tibble(cbind(
+    data.frame(periods = seq_along(c$cumulative_mean)),
+    interval_columns(c$cumulative_mean, c$cumulative_lower, c$cumulative_upper, levels,
+                     length(c$cumulative_mean))
+  ))
   bands <- function(lower, upper) {
-    cbind(data.frame(horizon = seq_len(h)),
-          interval_columns(rep(0, h), lower, upper, levels, h)[-1])
+    tibble::as_tibble(cbind(data.frame(horizon = seq_len(h)),
+                            interval_columns(rep(0, h), lower, upper, levels, h)[-1]))
   }
   list(
     name = c$name,
@@ -147,8 +151,9 @@ candidate_report <- function(c, raw, series) {
     components = c$components,
     score = c$score,
     params = stats::setNames(c$params$values, c$params$names),
-    accuracy = data.frame(horizon = seq_len(h), n = c$n, mape = na(c$mape), bias = na(c$bias),
-                          mae = na(c$mae), rmse = na(c$rmse), mase = na(c$mase)),
+    accuracy = tibble::tibble(horizon = seq_len(h), n = c$n, mape = na(c$mape),
+                              bias = na(c$bias), mae = na(c$mae), rmse = na(c$rmse),
+                              mase = na(c$mase)),
     bands = bands(c$band_lower, c$band_upper),
     cumulative_bands = bands(c$cumulative_band_lower, c$cumulative_band_upper),
     forecast = forecast,
@@ -166,7 +171,7 @@ candidate_report <- function(c, raw, series) {
 #' @param backtest A result of [backtest()].
 #' @param k Periods added up.
 #' @param candidate A candidate name; by default the chosen one.
-#' @return A one-row data frame: `periods`, `mean` and the bounds of each
+#' @return A one-row tibble: `periods`, `mean` and the bounds of each
 #'   interval.
 #' @examples
 #' bt <- backtest(AirPassengers, list(model_theta(), model_seasonal_naive()), origins = 24)
@@ -179,9 +184,7 @@ total_forecast <- function(backtest, k, candidate = backtest$best) {
   if (is.null(report)) abort("no candidate named ", candidate, ".")
   k <- check_count(k, "k", min = 1)
   if (k > nrow(report$cumulative)) abort("`k` goes beyond the horizon (", nrow(report$cumulative), ").")
-  out <- report$cumulative[k, , drop = FALSE]
-  rownames(out) <- NULL
-  out
+  report$cumulative[k, ]
 }
 
 #' @export
@@ -190,12 +193,11 @@ print.foresight_backtest <- function(x, n = 10, ...) {
       x$horizon, " periods ahead\n", sep = "")
   cat("Chosen: ", x$best, " (", toupper(x$metric), " ",
       format(x$ranking$score[x$ranking$chosen], digits = 4), ")\n\n", sep = "")
-  ranking <- x$ranking[order(x$ranking$score), c("name", "score")]
-  rownames(ranking) <- NULL
+  ranking <- as.data.frame(x$ranking[order(x$ranking$score), c("name", "score")])
   print(utils::head(ranking, n), digits = 4)
   if (nrow(ranking) > n) cat("... and ", nrow(ranking) - n, " more\n", sep = "")
   invisible(x)
 }
 
 #' @export
-as.data.frame.foresight_backtest <- function(x, ...) x$ranking
+as.data.frame.foresight_backtest <- function(x, ...) as.data.frame(x$ranking)

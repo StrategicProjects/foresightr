@@ -47,14 +47,6 @@ theme_foresight <- function(base_size = 11, base_family = "") {
     )
 }
 
-# Times of a `ts` as dates for monthly and quarterly data, numbers otherwise.
-as_time <- function(t, frequency) {
-  if (!frequency %in% c(4, 12)) return(t)
-  year <- floor(t + 1e-9)
-  month <- round((t - year) * 12) + 1
-  as.Date(sprintf("%04d-%02d-01", as.integer(year), as.integer(month)))
-}
-
 thousands <- function(x) format(x, big.mark = ",", scientific = FALSE, trim = TRUE)
 
 #' Charts of a backtest or a decomposition

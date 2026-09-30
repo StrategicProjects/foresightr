@@ -19,8 +19,9 @@ clean_series(y, period = NULL)
 }
 \value{
 \code{fill_gaps()} and \code{clean_series()}: the series, a \code{ts} when \code{y} is
-one. \code{find_outliers()}: a data frame with the \code{index} (from 1), the
-\code{value} and its \code{replacement}, plus the \code{time} for a \code{ts}.
+one. \code{find_outliers()}: a tibble with the \code{index} (from 1), the
+\code{value} and its \code{replacement}, plus the \code{time} for a \code{ts} (a date for
+monthly and quarterly data).
 }
 \description{
 \code{fill_gaps()} fills missing values, following the seasonal pattern when

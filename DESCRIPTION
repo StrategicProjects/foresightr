@@ -46,6 +46,7 @@ Depends:
 Imports:
     ggplot2 (>= 3.5.0),
     stats,
+    tibble,
     utils
 Suggests:
     testthat (>= 3.0.0),

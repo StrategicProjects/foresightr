@@ -44,6 +44,12 @@ test_that("the backtest report is complete", {
   expect_equal(total_forecast(bt, 6)$mean, sum(bt$forecast$mean))
   expect_error(total_forecast(bt, 7), "beyond")
   expect_s3_class(as.data.frame(bt), "data.frame")
+  expect_false(inherits(as.data.frame(bt), "tbl_df"))
+  for (table in list(bt$ranking, bt$forecast, report$accuracy, report$bands, report$cumulative,
+                     total_forecast(bt, 3), find_outliers(AirPassengers), fourier_terms(12, 2, 20),
+                     seasonal_dummies(12, 20))) {
+    expect_s3_class(table, "tbl_df")
+  }
   expect_output(print(bt), "Chosen")
 })
 

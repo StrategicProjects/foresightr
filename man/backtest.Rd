@@ -50,13 +50,16 @@ origin).}
 as \code{\link[=foresight_threads]{foresight_threads()}} allows. The result is the same either way.}
 }
 \value{
-An object of class \code{foresight_backtest}, a list with
+An object of class \code{foresight_backtest}, a list whose tables are
+tibbles:
 \itemize{
 \item \code{ranking}: one row per candidate that went through the backtest, with
 its \code{score}, whether it was \code{chosen}, the models involved and a
 description; \code{dropped} names those left out;
 \item \code{best}: the name of the chosen candidate;
-\item \code{forecast}: the forecast of the chosen candidate with its intervals;
+\item \code{forecast}: the forecast of the chosen candidate with its intervals,
+and the \code{time} of each period for a \code{ts} (a date for monthly and
+quarterly data);
 \item \code{candidates}: for each candidate, its \code{accuracy} by horizon (pairs
 evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error \code{bands},
 the \code{forecast}, the \code{cumulative} forecast of totals, the \code{trajectories}

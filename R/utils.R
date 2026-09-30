@@ -98,10 +98,18 @@ along <- function(values, series) {
   stats::ts(values, start = series$tsp[1], frequency = series$tsp[3])
 }
 
+# Times of a `ts` as dates for monthly and quarterly data, numbers otherwise.
+as_time <- function(t, frequency) {
+  if (!frequency %in% c(4, 12)) return(t)
+  year <- floor(t + 1e-9)
+  month <- round((t - year) * 12) + 1
+  as.Date(sprintf("%04d-%02d-01", as.integer(year), as.integer(month)))
+}
+
 # Times of the periods after the end of the series (NULL without a `ts`).
 times_after <- function(h, series) {
   if (is.null(series$tsp)) return(NULL)
-  series$tsp[2] + seq_len(h) / series$tsp[3]
+  as_time(series$tsp[2] + seq_len(h) / series$tsp[3], series$tsp[3])
 }
 
 # A matrix from a vector filled row by row: [row][column].

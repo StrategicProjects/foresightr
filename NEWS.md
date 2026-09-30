@@ -2,6 +2,11 @@
 
 * The installation no longer runs a Rust binary to regenerate the R wrappers,
   which ship with the package: that step failed on CRAN's Windows pretest.
+* Tables are tibbles: the `ranking`, `forecast`, `cumulative`, `accuracy` and
+  `bands` of a backtest, `total_forecast()`, `find_outliers()`,
+  `fourier_terms()` and `seasonal_dummies()`. `as.data.frame()` on a backtest
+  still gives a plain data frame. The `time` column of forecasts and outliers
+  is a date for monthly and quarterly series.
 
 # foresightr 0.1.0
 

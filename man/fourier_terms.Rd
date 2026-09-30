@@ -18,7 +18,7 @@ terms).}
 \item{rows}{Rows: the length of the series plus the horizon.}
 }
 \value{
-A data frame.
+A tibble.
 }
 \description{
 \code{fourier_terms()} gives the sine and cosine pairs of a seasonal period up

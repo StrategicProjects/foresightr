@@ -14,7 +14,7 @@ total_forecast(backtest, k, candidate = backtest$best)
 \item{candidate}{A candidate name; by default the chosen one.}
 }
 \value{
-A one-row data frame: \code{periods}, \code{mean} and the bounds of each
+A one-row tibble: \code{periods}, \code{mean} and the bounds of each
 interval.
 }
 \description{
