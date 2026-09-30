@@ -77,16 +77,15 @@ thousands <- function(x) format(x, big.mark = ",", scientific = FALSE, trim = TR
 #' @param candidate A candidate name, for `type = "forecast"`; by default
 #'   the chosen one.
 #' @param history How many of the last observations to show.
-#' @param top How many of the best candidates, for `type = "accuracy"`.
+#' @param top How many of the best candidates, for `type = "accuracy"`: at
+#'   most 4, so that they can be told apart.
 #' @param ... Not used.
 #' @return A ggplot object.
 #' @examples
-#' \donttest{
 #' bt <- backtest(AirPassengers, origins = 24)
 #' autoplot(bt)
 #' autoplot(bt, "accuracy")
 #' autoplot(decompose_stl(log(AirPassengers), seasonal_window = 13))
-#' }
 #' @name autoplot.foresight_backtest
 #' @importFrom ggplot2 autoplot .data
 #' @export
@@ -111,6 +110,7 @@ plot.foresight_backtest <- function(x, type = c("forecast", "accuracy", "ranking
 forecast_chart <- function(bt, candidate, history) {
   report <- bt$candidates[[candidate]]
   if (is.null(report)) abort("no candidate named ", candidate, ".")
+  history <- check_count(history, "history", min = 1)
   y <- bt$series$values
   n <- length(y)
   tsp <- bt$series$tsp
@@ -122,27 +122,47 @@ forecast_chart <- function(bt, candidate, history) {
   # the forecast starts from the last observation, so the line is continuous
   future <- data.frame(time = as_time(c(at[n], ahead), frequency),
                        mean = c(y[n], report$forecast$mean))
-  levels <- sort(bt$levels, decreasing = TRUE)
-  bands <- do.call(rbind, lapply(levels, function(l) {
-    data.frame(time = future$time, level = l,
-               lower = c(y[n], report$forecast[[paste0("lower_", level_names(l))]]),
-               upper = c(y[n], report$forecast[[paste0("upper_", level_names(l))]]))
-  }))
-  alphas <- stats::setNames(seq(0.14, 0.34, length.out = length(levels)), levels)
-  last <- future[nrow(future), ]
-  # each band labelled at its upper edge, kept apart from the next
-  edge <- vapply(levels, function(l) max(bands$upper[bands$level == l & bands$time == last$time]), 0)
-  gap <- 0.06 * diff(range(c(past$value, bands$lower, bands$upper)))
-  for (i in seq_along(edge)[-1]) edge[i] <- min(edge[i], edge[i - 1] - gap)
-  labels <- data.frame(time = last$time, level = levels, y = edge,
-                       text = paste0(level_names(levels), "%"))
   score <- bt$ranking$score[bt$ranking$name == candidate]
-  ggplot2::ggplot() +
-    ggplot2::geom_ribbon(data = bands,
-                         ggplot2::aes(x = .data$time, ymin = .data$lower, ymax = .data$upper,
-                                      group = .data$level, alpha = factor(.data$level)),
-                         fill = brand) +
-    ggplot2::scale_alpha_manual(values = alphas, guide = "none") +
+  levels <- sort(bt$levels, decreasing = TRUE)
+  p <- ggplot2::ggplot()
+  ends <- range(past$value, future$mean, finite = TRUE)
+  if (length(levels)) {
+    bands <- do.call(rbind, lapply(levels, function(l) {
+      data.frame(time = future$time, level = l,
+                 lower = c(y[n], report$forecast[[paste0("lower_", level_names(l))]]),
+                 upper = c(y[n], report$forecast[[paste0("upper_", level_names(l))]]))
+    }))
+    # a horizon without usable errors has no interval
+    bands <- bands[stats::complete.cases(bands), ]
+    ends <- range(ends, bands$lower, bands$upper, finite = TRUE)
+    alphas <- stats::setNames(seq(0.14, 0.34, length.out = length(levels)), levels)
+    p <- p +
+      ggplot2::geom_ribbon(data = bands,
+                           ggplot2::aes(x = .data$time, ymin = .data$lower, ymax = .data$upper,
+                                        group = .data$level, alpha = factor(.data$level)),
+                           fill = brand) +
+      ggplot2::scale_alpha_manual(values = alphas, guide = "none")
+    # each band labelled at its upper edge, kept apart from the next
+    last <- bands[bands$time == max(bands$time), ]
+    last <- last[order(last$level, decreasing = TRUE), ]
+    if (nrow(last) && nrow(bands) > length(levels)) {
+      edge <- last$upper
+      gap <- 0.06 * diff(ends)
+      for (i in seq_along(edge)[-1]) edge[i] <- min(edge[i], edge[i - 1] - gap)
+      labels <- data.frame(time = last$time, y = edge,
+                           text = paste0(level_names(last$level), "%"))
+      p <- p + ggplot2::geom_text(data = labels,
+                                  ggplot2::aes(.data$time, .data$y, label = .data$text),
+                                  colour = muted, size = 3, hjust = -0.25, vjust = 0.5)
+    }
+  }
+  intervals <- if (length(levels)) {
+    sprintf("Forecast with the %s empirical intervals",
+            paste(paste0(level_names(sort(bt$levels)), "%"), collapse = " and "))
+  } else {
+    "Forecast"
+  }
+  p +
     ggplot2::geom_vline(xintercept = past$time[nrow(past)], colour = muted, linewidth = 0.3,
                         linetype = "22") +
     ggplot2::geom_line(data = past, ggplot2::aes(.data$time, .data$value), colour = ink,
@@ -151,15 +171,12 @@ forecast_chart <- function(bt, candidate, history) {
                        linewidth = 0.9) +
     ggplot2::geom_point(data = past[nrow(past), ], ggplot2::aes(.data$time, .data$value),
                         colour = ink, fill = "white", shape = 21, size = 2.2, stroke = 0.8) +
-    ggplot2::geom_text(data = labels, ggplot2::aes(.data$time, .data$y, label = .data$text),
-                       colour = muted, size = 3, hjust = -0.25, vjust = 0.5) +
     ggplot2::scale_y_continuous(labels = thousands) +
     ggplot2::coord_cartesian(clip = "off") +
     ggplot2::labs(
       title = report$name,
-      subtitle = sprintf("Forecast with the %s empirical intervals \u00b7 %s %.2f over %d origins",
-                         paste(paste0(level_names(sort(bt$levels)), "%"), collapse = " and "),
-                         toupper(bt$metric), score, bt$origins),
+      subtitle = sprintf("%s \u00b7 %s %.2f over %d origins", intervals, toupper(bt$metric),
+                         score, bt$origins),
       x = NULL, y = NULL
     ) +
     theme_foresight() +

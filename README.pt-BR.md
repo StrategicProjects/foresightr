@@ -23,7 +23,7 @@ remotes::install_github("StrategicProjects/foresightr")
 ```
 
 A instalação pelo código-fonte compila o Rust e precisa dele
-(<https://rustup.rs>); no Windows, também do alvo GNU:
+(<https://rustup.rs>, versão 1.81 ou mais nova); no Windows, também do alvo GNU:
 `rustup target add x86_64-pc-windows-gnu`.
 
 ## Uso

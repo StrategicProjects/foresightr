@@ -76,6 +76,11 @@ impl fs::Model for Shared {
     fn fit(&self, y: fs::Series<'_>) -> Option<Box<dyn fs::Fitted>> {
         self.0.fit(y)
     }
+
+    // the model's own checks (regressors that reach the horizon) still apply
+    fn forecast(&self, y: fs::Series<'_>, h: usize) -> Option<Vec<f64>> {
+        self.0.forecast(y, h)
+    }
 }
 
 /// Models whose estimate says more than the forecasts.
@@ -479,7 +484,8 @@ fn rs_fit(spec: Robj, values: Vec<f64>, period: f64, phase: f64) -> Result<List>
             let (p, q) = f.arma();
             let (alpha, beta) = f.smoothing();
             (
-                f.likelihood(),
+                // TBATS reports −2 log-likelihood up to a constant
+                f64::NAN,
                 f.aic(),
                 f64::NAN,
                 f64::NAN,
@@ -491,7 +497,8 @@ fn rs_fit(spec: Robj, values: Vec<f64>, period: f64, phase: f64) -> Result<List>
                     trend = f.trend().is_some(),
                     damping = opt(f.trend()),
                     arma = vec![p as f64, q as f64],
-                    smoothing = vec![alpha, beta]
+                    smoothing = vec![alpha, beta],
+                    minus_two_log_likelihood = f.likelihood()
                 ),
             )
         }
@@ -517,7 +524,14 @@ fn rs_predict(pointer: Robj, h: f64) -> Result<Vec<f64>> {
     let fit: &ExternalPtr<FitBox> = (&pointer)
         .try_into()
         .map_err(|_| Error::Other("the fit is no longer in memory: fit the model again".into()))?;
-    Ok(fit.0.fitted().forecast(h as usize))
+    let forecast = fit.0.fitted().forecast(h as usize);
+    if forecast.iter().any(|v| !v.is_finite()) {
+        return fail(
+            "the forecast is not finite that far ahead: regressors must cover the series and \
+             the horizon",
+        );
+    }
+    Ok(forecast)
 }
 
 /// Fits and forecasts in one go.
@@ -535,28 +549,46 @@ fn rs_forecast(spec: Robj, values: Vec<f64>, period: f64, phase: f64, h: f64) ->
 
 // ---------------------------------------------------------------- backtest
 
-/// Row-major `[horizon][level]`.
-fn flat_bands(rows: &[fs::HorizonStats], cumulative: bool, lower: bool) -> Vec<f64> {
-    rows.iter()
-        .flat_map(|r| if cumulative { &r.cumulative } else { &r.bands })
-        .map(|b| if lower { b.lower } else { b.upper })
-        .collect()
+/// The bounds of each level, row-major `[row][level]`; NaN where a row has
+/// no band of that level (no usable error at that horizon).
+fn bounds<T>(
+    rows: impl Iterator<Item = T>,
+    levels: &[f64],
+    find: impl Fn(&T, f64) -> Option<(f64, f64)>,
+) -> (Vec<f64>, Vec<f64>) {
+    let (mut lower, mut upper) = (Vec::new(), Vec::new());
+    for row in rows {
+        for &level in levels {
+            let (a, z) = find(&row, level).unwrap_or((f64::NAN, f64::NAN));
+            lower.push(a);
+            upper.push(z);
+        }
+    }
+    (lower, upper)
 }
 
-/// Row-major `[point][level]`.
-fn flat_points(points: &[fs::Point], lower: bool) -> Vec<f64> {
-    points
+fn band(bands: &[fs::Band], level: f64) -> Option<(f64, f64)> {
+    bands
         .iter()
-        .flat_map(|p| &p.intervals)
-        .map(|i| if lower { i.lower } else { i.upper })
-        .collect()
+        .find(|b| (b.level - level).abs() < 1e-12)
+        .map(|b| (b.lower, b.upper))
 }
 
-fn candidate_list(c: &fs::CandidateReport) -> List {
+fn interval(point: &fs::Point, level: f64) -> Option<(f64, f64)> {
+    point.interval(level).map(|i| (i.lower, i.upper))
+}
+
+fn candidate_list(c: &fs::CandidateReport, levels: &[f64]) -> List {
     let h = &c.horizons;
     let cumulative: Vec<fs::Point> = (1..=c.forecast.len())
         .filter_map(|k| c.cumulative(k))
         .collect();
+    let (band_lower, band_upper) = bounds(h.iter(), levels, |x, l| band(&x.bands, l));
+    let (cumulative_band_lower, cumulative_band_upper) =
+        bounds(h.iter(), levels, |x, l| band(&x.cumulative, l));
+    let (lower, upper) = bounds(c.forecast.iter(), levels, |p, l| interval(p, l));
+    let (cumulative_lower, cumulative_upper) =
+        bounds(cumulative.iter(), levels, |p, l| interval(p, l));
     list!(
         name = c.name.clone(),
         description = c.description.clone(),
@@ -569,17 +601,17 @@ fn candidate_list(c: &fs::CandidateReport) -> List {
         mae = h.iter().map(|x| opt(x.mae)).collect::<Vec<_>>(),
         rmse = h.iter().map(|x| opt(x.rmse)).collect::<Vec<_>>(),
         mase = h.iter().map(|x| opt(x.mase)).collect::<Vec<_>>(),
-        band_lower = flat_bands(h, false, true),
-        band_upper = flat_bands(h, false, false),
-        cumulative_band_lower = flat_bands(h, true, true),
-        cumulative_band_upper = flat_bands(h, true, false),
+        band_lower = band_lower,
+        band_upper = band_upper,
+        cumulative_band_lower = cumulative_band_lower,
+        cumulative_band_upper = cumulative_band_upper,
         trajectories = c.trajectories.iter().flatten().copied().collect::<Vec<_>>(),
         mean = c.forecast.iter().map(|p| p.mean).collect::<Vec<_>>(),
-        lower = flat_points(&c.forecast, true),
-        upper = flat_points(&c.forecast, false),
+        lower = lower,
+        upper = upper,
         cumulative_mean = cumulative.iter().map(|p| p.mean).collect::<Vec<_>>(),
-        cumulative_lower = flat_points(&cumulative, true),
-        cumulative_upper = flat_points(&cumulative, false)
+        cumulative_lower = cumulative_lower,
+        cumulative_upper = cumulative_upper
     )
 }
 
@@ -623,12 +655,12 @@ fn rs_backtest(
         parallel,
     };
     let Some(report) = config.run(series(&values, period, phase), &models) else {
-        return fail("the series is too short for the backtest (see min_train) or not finite");
+        return fail("no candidate could forecast at every origin and from the whole series");
     };
     let all: Vec<Robj> = report
         .candidates
         .iter()
-        .map(|c| candidate_list(c).into())
+        .map(|c| candidate_list(c, &levels).into())
         .collect();
     Ok(list!(
         candidates = List::from_values(all),
@@ -638,6 +670,17 @@ fn rs_backtest(
         horizon = report.horizon as f64,
         levels = levels
     ))
+}
+
+/// Limits the threads of backtests and ensembles (0: every core); returns
+/// the number in use.
+/// @noRd
+#[extendr]
+fn rs_threads(threads: f64) -> f64 {
+    if !threads.is_nan() {
+        fs::set_max_threads(threads as usize);
+    }
+    fs::max_threads() as f64
 }
 
 // ---------------------------------------------------------------- decomposition
@@ -861,6 +904,7 @@ extendr_module! {
     fn rs_predict;
     fn rs_forecast;
     fn rs_backtest;
+    fn rs_threads;
     fn rs_stl;
     fn rs_mstl;
     fn rs_interpolate;

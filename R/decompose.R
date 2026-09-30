@@ -2,15 +2,18 @@
 #'
 #' `decompose_stl()` splits a series into trend, seasonal pattern and
 #' remainder by LOESS (Cleveland, Cleveland, McRae & Terpenning, 1990);
-#' its defaults are those of [stats::stl()] and its numbers agree with it.
+#' its defaults are those of [stats::stl()] and, without `robust`, so are its
+#' numbers (with `robust = TRUE` the two agree up to the eleventh robustness
+#' round and drift apart in the third digit after that).
 #' `decompose_mstl()` applies STL in turn to each of several seasonal periods
 #' (Bandara, Hyndman & Bergmeir, 2021).
 #'
-#' @param y A `ts` or a numeric vector.
+#' @param y A `ts` or a numeric vector, longer than two full cycles.
 #' @param period The seasonal period, when `y` is a plain vector.
-#' @param seasonal_window The LOESS window over the cycles, an odd number of
-#'   at least 7: the smaller, the faster the pattern may change. `NULL`
-#'   keeps the same pattern in every cycle (`s.window = "periodic"`).
+#' @param seasonal_window The LOESS window over the cycles, an odd number,
+#'   usually 7 or more (an even number is taken as the next odd one): the
+#'   smaller, the faster the pattern may change. `NULL` keeps the same
+#'   pattern in every cycle (`s.window = "periodic"`).
 #' @param trend_window,low_pass_window LOESS windows of the trend and of the
 #'   low-pass filter.
 #' @param degrees LOESS degrees (0 or 1) of the seasonal, trend and low-pass
@@ -30,15 +33,16 @@ decompose_stl <- function(y, period = NULL, seasonal_window = NULL, trend_window
                           low_pass_window = NULL, degrees = NULL, robust = FALSE, inner = NULL,
                           outer = NULL) {
   series <- as_series(y, period)
-  optional <- function(x, what, min = 1) {
-    if (is.null(x)) NaN else check_count(x, what, min = min)
+  optional <- function(x, what, min = 1, max = most) {
+    if (is.null(x)) NaN else check_count(x, what, min = min, max = max)
   }
   raw <- rs_stl(series$values, series$period, optional(seasonal_window, "seasonal_window", 3),
                 optional(trend_window, "trend_window"),
                 optional(low_pass_window, "low_pass_window"),
-                check_counts(degrees %||% numeric(0), "degrees"),
-                check_flag(robust, "robust"), optional(inner, "inner"),
-                optional(outer, "outer", 0))
+                check_counts(degrees %||% numeric(0), "degrees",
+                             n = if (is.null(degrees)) NULL else 3, max = 1),
+                check_flag(robust, "robust"), optional(inner, "inner", max = 1000),
+                optional(outer, "outer", 0, max = 1000))
   decomposition(raw, series)
 }
 
@@ -53,7 +57,8 @@ decompose_mstl <- function(y, periods = NULL, windows = NULL, iterations = NULL,
   series <- as_series(y)
   periods <- check_counts(periods %||% series$period, "periods")
   raw <- rs_mstl(series$values, periods, check_counts(windows %||% numeric(0), "windows"),
-                 if (is.null(iterations)) NaN else check_count(iterations, "iterations", min = 1),
+                 if (is.null(iterations)) NaN else check_count(iterations, "iterations", min = 1,
+                                                               max = 100),
                  check_flag(robust, "robust"))
   decomposition(raw, series)
 }

@@ -35,6 +35,13 @@ periods need not be whole numbers and there may be several. Whatever is
 left as \code{NULL} is chosen by AIC. It is the slowest model of the package:
 seconds for ten years of monthly data.
 }
+\examples{
+# a structure given in full fits at once; whatever is left out is chosen
+model <- model_tbats(harmonics = 3, box_cox = FALSE, trend = TRUE, damped = FALSE,
+                     arma_errors = FALSE)
+fit <- fit_model(model, log(AirPassengers))
+exp(predict(fit, 3))
+}
 \seealso{
 Other models:
 \code{\link[=model_arima]{model_arima()}},

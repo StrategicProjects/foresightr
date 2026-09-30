@@ -25,6 +25,11 @@ rs_forecast <- function(spec, values, period, phase, h) .Call(wrap__rs_forecast,
 #' @noRd
 rs_backtest <- function(values, period, phase, candidates, origins, horizon, min_train, window, combine, levels, metric, parallel) .Call(wrap__rs_backtest, values, period, phase, candidates, origins, horizon, min_train, window, combine, levels, metric, parallel)
 
+#' Limits the threads of backtests and ensembles (0: every core); returns
+#' the number in use.
+#' @noRd
+rs_threads <- function(threads) .Call(wrap__rs_threads, threads)
+
 #' STL.
 #' @noRd
 rs_stl <- function(values, period, seasonal_window, trend_window, low_pass_window, degrees, robust, inner, outer) .Call(wrap__rs_stl, values, period, seasonal_window, trend_window, low_pass_window, degrees, robust, inner, outer)

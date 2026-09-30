@@ -34,6 +34,11 @@ orders by a stepwise search on the information criterion (Hyndman &
 Khandakar, 2008). In a backtest the choice is made again at every origin,
 so the whole procedure is judged, not one lucky specification.
 }
+\examples{
+fit <- fit_model(model_auto_arima(), log(AirPassengers))
+fit$details$order
+fit$details$seasonal_order
+}
 \seealso{
 Other models:
 \code{\link[=model_arima]{model_arima()}},

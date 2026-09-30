@@ -1,3 +1,4 @@
+skip_if_not_installed("jsonlite")
 models <- recorded("rust_models")
 
 for (name in c("air", "icms", "fpe")) {

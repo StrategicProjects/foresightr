@@ -40,7 +40,8 @@ the chosen one.}
 
 \item{history}{How many of the last observations to show.}
 
-\item{top}{How many of the best candidates, for \code{type = "accuracy"}.}
+\item{top}{How many of the best candidates, for \code{type = "accuracy"}: at
+most 4, so that they can be told apart.}
 
 \item{...}{Not used.}
 }
@@ -64,10 +65,8 @@ the remainder. \code{plot()} draws the same chart. Both return a ggplot object,
 which can be themed and annotated further.
 }
 \examples{
-\donttest{
 bt <- backtest(AirPassengers, origins = 24)
 autoplot(bt)
 autoplot(bt, "accuracy")
 autoplot(decompose_stl(log(AirPassengers), seasonal_window = 13))
-}
 }

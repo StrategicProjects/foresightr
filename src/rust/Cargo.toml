@@ -3,7 +3,7 @@ name = 'foresightr'
 publish = false
 version = '0.1.0'
 edition = '2021'
-rust-version = '1.80'
+rust-version = '1.81'
 
 [lib]
 crate-type = [ 'rlib', 'staticlib' ]
@@ -15,7 +15,7 @@ path = 'document.rs'
 
 [dependencies]
 extendr-api = '0.9'
-fs = { package = 'foresight', version = '=0.7.1' }
+fs = { package = 'foresight', version = '=0.7.2' }
 
 [profile.release]
 lto = true

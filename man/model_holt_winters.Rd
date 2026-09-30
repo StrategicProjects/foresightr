@@ -15,6 +15,9 @@ Holt-Winters with multiplicative seasonality, the smoothing parameters
 chosen by the squared error of the one-step forecasts. The series must be
 positive and cover three cycles.
 }
+\examples{
+fit_model(model_holt_winters(), AirPassengers)$params
+}
 \seealso{
 Other models:
 \code{\link[=model_arima]{model_arima()}},

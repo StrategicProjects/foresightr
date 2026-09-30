@@ -2,6 +2,9 @@
 # crate itself, so only the floating point of each platform differs. The
 # tolerances are those of the Go edition, which reproduces the same numbers
 # independently.
+# two threads at most, whatever the machine
+foresight_threads(2)
+
 recorded <- function(name) {
   jsonlite::fromJSON(test_path("data", paste0(name, ".json")), simplifyVector = FALSE)
 }

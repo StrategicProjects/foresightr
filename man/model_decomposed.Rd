@@ -23,6 +23,9 @@ Decomposes the series by STL (or MSTL, for several periods), forecasts
 the seasonally adjusted series with \code{model} and adds back the seasonal
 pattern of the last cycle.
 }
+\examples{
+forecast_model(model_log(model_decomposed(model_drift())), AirPassengers, h = 3)
+}
 \seealso{
 Other models:
 \code{\link[=model_arima]{model_arima()}},

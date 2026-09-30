@@ -4,20 +4,26 @@
 
 abort <- function(...) stop(paste0(...), call. = FALSE)
 
-check_count <- function(x, what, min = 0, null = FALSE) {
+# Sizes that drive allocations or loops are kept within reason: a larger
+# number is a mistake, and would exhaust memory or never return.
+most <- 1e6
+
+check_count <- function(x, what, min = 0, max = most, null = FALSE) {
   if (null && is.null(x)) return(NULL)
-  if (!is.numeric(x) || length(x) != 1 || is.na(x) || x != round(x) || x < min) {
-    abort("`", what, "` must be a whole number of at least ", min, ".")
+  if (!is.numeric(x) || length(x) != 1 || is.na(x) || x != round(x) || x < min || x > max) {
+    abort("`", what, "` must be a whole number from ", min, " to ", format(max, big.mark = ",", scientific = FALSE),
+          ".")
   }
   as.numeric(x)
 }
 
-check_counts <- function(x, what, n = NULL, null = FALSE) {
+check_counts <- function(x, what, n = NULL, min = 0, max = most, null = FALSE) {
   if (null && is.null(x)) return(NULL)
-  if (!is.numeric(x) || anyNA(x) || any(x != round(x)) || any(x < 0) ||
+  if (!is.numeric(x) || anyNA(x) || any(x != round(x)) || any(x < min) || any(x > max) ||
       (!is.null(n) && length(x) != n)) {
     abort("`", what, "` must be ",
-          if (is.null(n)) "whole numbers" else paste(n, "whole numbers"), ", none negative.")
+          if (is.null(n)) "whole numbers" else paste(n, "whole numbers"), " from ", min, " to ",
+          format(max, big.mark = ",", scientific = FALSE), ".")
   }
   as.numeric(x)
 }
@@ -73,7 +79,7 @@ as_series <- function(y, period = NULL, missing = FALSE) {
     phase <- (stats::cycle(y)[1] - 1) %% period
     tsp <- stats::tsp(y)
   } else {
-    period <- check_count(period %||% 1, "period", min = 1)
+    period <- check_count(period %||% 1, "period", min = 1, max = 1e5)
     phase <- 0
     tsp <- NULL
   }
@@ -104,4 +110,5 @@ by_row <- function(x, rows) {
   matrix(x, nrow = rows, byrow = TRUE)
 }
 
-level_names <- function(levels) paste0(round(levels * 100))
+# A level as a percentage for column names: 0.8 is "80", 0.995 is "99.5".
+level_names <- function(levels) format(round(levels * 100, 4), trim = TRUE, drop0trailing = TRUE)

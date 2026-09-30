@@ -26,13 +26,14 @@ decompose_mstl(
 )
 }
 \arguments{
-\item{y}{A \code{ts} or a numeric vector.}
+\item{y}{A \code{ts} or a numeric vector, longer than two full cycles.}
 
 \item{period}{The seasonal period, when \code{y} is a plain vector.}
 
-\item{seasonal_window}{The LOESS window over the cycles, an odd number of
-at least 7: the smaller, the faster the pattern may change. \code{NULL}
-keeps the same pattern in every cycle (\code{s.window = "periodic"}).}
+\item{seasonal_window}{The LOESS window over the cycles, an odd number,
+usually 7 or more (an even number is taken as the next odd one): the
+smaller, the faster the pattern may change. \code{NULL} keeps the same
+pattern in every cycle (\code{s.window = "periodic"}).}
 
 \item{trend_window, low_pass_window}{LOESS windows of the trend and of the
 low-pass filter.}
@@ -60,7 +61,9 @@ An object of class \code{foresight_decomposition}, a list with
 \description{
 \code{decompose_stl()} splits a series into trend, seasonal pattern and
 remainder by LOESS (Cleveland, Cleveland, McRae & Terpenning, 1990);
-its defaults are those of \code{\link[stats:stl]{stats::stl()}} and its numbers agree with it.
+its defaults are those of \code{\link[stats:stl]{stats::stl()}} and, without \code{robust}, so are its
+numbers (with \code{robust = TRUE} the two agree up to the eleventh robustness
+round and drift apart in the third digit after that).
 \code{decompose_mstl()} applies STL in turn to each of several seasonal periods
 (Bandara, Hyndman & Bergmeir, 2021).
 }

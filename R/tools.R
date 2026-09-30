@@ -71,7 +71,7 @@ kpss_statistic <- function(y) na(rs_kpss(check_numbers(y, "y")))
 #' @rdname kpss_statistic
 #' @export
 n_differences <- function(y, max = 2) {
-  rs_ndiffs(check_numbers(y, "y"), check_count(max, "max"))
+  rs_ndiffs(check_numbers(y, "y"), check_count(max, "max", max = 5))
 }
 
 #' @rdname kpss_statistic
@@ -91,7 +91,7 @@ seasonal_strength <- function(y, period = NULL) {
 #' @rdname kpss_statistic
 #' @export
 autocorrelations <- function(y, max_lag) {
-  rs_acf(check_numbers(y, "y"), check_count(max_lag, "max_lag", min = 1))
+  na(rs_acf(check_numbers(y, "y"), check_count(max_lag, "max_lag", min = 1)))
 }
 
 #' @rdname kpss_statistic
@@ -167,8 +167,9 @@ accuracy_of <- function(actual, forecast, measure) {
 #' External variables for a regression with ARIMA errors
 #'
 #' `fourier_terms()` gives the sine and cosine pairs of a seasonal period up
-#' to `order` harmonics; `seasonal_dummies()` one dummy per season but the
-#' first. Both have `rows` rows, which must cover the series and the horizon
+#' to `order` harmonics (those beyond half the period, which would repeat
+#' the earlier ones, are left out); `seasonal_dummies()` one dummy per season
+#' but the first. Both have `rows` rows, which must cover the series and the horizon
 #' to be forecast. Combine them, or add your own columns, with [cbind()].
 #'
 #' @param period The seasonal period (need not be a whole number for Fourier
@@ -182,15 +183,17 @@ accuracy_of <- function(actual, forecast, measure) {
 #' predict(fit, 12)
 #' @export
 fourier_terms <- function(period, order, rows) {
-  as.data.frame(rs_fourier(check_number(period, "period"), check_count(order, "order", min = 1),
-                           check_count(rows, "rows", min = 1)))
+  period <- check_number(period, "period")
+  if (period <= 1) abort("`period` must be above 1.")
+  as.data.frame(rs_fourier(period, check_count(order, "order", min = 1, max = 1000),
+                           check_count(rows, "rows", min = 1, max = 1e7)))
 }
 
 #' @rdname fourier_terms
 #' @export
 seasonal_dummies <- function(period, rows) {
-  as.data.frame(rs_seasonal_dummies(check_count(period, "period", min = 2),
-                                    check_count(rows, "rows", min = 1)))
+  as.data.frame(rs_seasonal_dummies(check_count(period, "period", min = 2, max = 1000),
+                                    check_count(rows, "rows", min = 1, max = 1e7)))
 }
 
 as_regressors <- function(x) {

@@ -18,7 +18,8 @@ library(foresightr)
 ## STL
 
 `decompose_stl()` splits a series into trend, seasonal pattern and remainder
-by LOESS. Its defaults are those of `stats::stl()`, and so are its numbers.
+by LOESS. Its defaults are those of `stats::stl()` and, without `robust`, so
+are its numbers.
 
 ```{r}
 d <- decompose_stl(log(AirPassengers), seasonal_window = 13)

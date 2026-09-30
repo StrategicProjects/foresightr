@@ -22,8 +22,9 @@ A data frame.
 }
 \description{
 \code{fourier_terms()} gives the sine and cosine pairs of a seasonal period up
-to \code{order} harmonics; \code{seasonal_dummies()} one dummy per season but the
-first. Both have \code{rows} rows, which must cover the series and the horizon
+to \code{order} harmonics (those beyond half the period, which would repeat
+the earlier ones, are left out); \code{seasonal_dummies()} one dummy per season
+but the first. Both have \code{rows} rows, which must cover the series and the horizon
 to be forecast. Combine them, or add your own columns, with \code{\link[=cbind]{cbind()}}.
 }
 \examples{

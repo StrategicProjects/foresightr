@@ -10,7 +10,8 @@ model_log_linear(window = NULL, deflator = NULL)
 \item{window}{Fit on the last \code{window} observations only.}
 
 \item{deflator}{A price index to deflate by before fitting, one value per
-period of the series and of the horizon; the forecasts are inflated back.}
+period from the first observation on. The future of the index is not
+read: the forecasts are inflated back at its growth over the last cycle.}
 }
 \value{
 A model specification, to use with \code{\link[=fit_model]{fit_model()}},
@@ -19,6 +20,9 @@ A model specification, to use with \code{\link[=fit_model]{fit_model()}},
 \description{
 Regression of the log of the series on a linear trend and seasonal
 dummies, brought back with Duan's smearing correction.
+}
+\examples{
+forecast_model(model_log_linear(window = 60), AirPassengers, h = 3)
 }
 \seealso{
 Other models:

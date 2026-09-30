@@ -35,9 +35,9 @@ dependencies = [
 
 [[package]]
 name = "foresight"
-version = "0.7.1"
+version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87da2acde51ebebfa0f2e5608b7998b917e101a43d91822c1254c768bc8dc6a0"
+checksum = "f2785e658f32cc4debda9f43143c396b4301930fb049e506aadc97e8f075f849"
 
 [[package]]
 name = "foresightr"

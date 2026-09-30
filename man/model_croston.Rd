@@ -32,6 +32,10 @@ bias; \code{"tsb"} (Teunter, Syntetos & Babai, 2011) smooths the probability of
 demand, so the rate falls while nothing is sold. The forecast is the same
 for every horizon.
 }
+\examples{
+demand <- c(0, 0, 3, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0)
+forecast_model(model_croston("sba"), demand, h = 3)
+}
 \seealso{
 Other models:
 \code{\link[=model_arima]{model_arima()}},

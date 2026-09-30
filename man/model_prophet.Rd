@@ -27,7 +27,8 @@ model_prophet(
 yearly patterns, at most half the period).}
 
 \item{events}{Named list: for each event, the positions where it happens,
-counted from 1 at the first observation, future ones included.}
+counted from 1 at the first observation, future ones included.
+Seasonal terms are fitted from two full cycles on.}
 
 \item{steps}{Named list: for each lasting change of level, the position
 from which it applies.}
@@ -41,6 +42,21 @@ The model of Taylor & Letham (2018) fitted without Stan: a piecewise
 linear trend whose changes of slope are shrunk by a Laplace prior (those
 that do not matter come out as exactly zero), Fourier seasonality, and
 optional events and lasting steps.
+}
+\examples{
+# ten years of monthly sales with a campaign every other November (+20)
+# and a lasting change of level from the 81st month on (-15)
+t <- 1:120
+sales <- 200 + 0.8 * t + 5 * sin(2 * pi * t / 12)
+campaigns <- c(11, 35, 59, 83, 107)
+sales[campaigns] <- sales[campaigns] + 20
+sales[t >= 81] <- sales[t >= 81] - 15
+# the campaign planned for month 131 enters the forecast
+model <- model_prophet(changepoints = 0,
+                       events = list(campaign = c(campaigns, 131)),
+                       steps = list(new_law = 81))
+fit <- fit_model(model, ts(sales, frequency = 12))
+round(fit$details$effects, 1)
 }
 \seealso{
 Other models:

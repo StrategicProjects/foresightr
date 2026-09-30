@@ -12,10 +12,14 @@
 #' @return `fit_model()`: an object of class `foresight_fit`, a list with the
 #'   model name and description, the estimated `params` (named numeric),
 #'   `log_likelihood`, `aic`, `aicc`, `bic` and `residuals` when the model has
-#'   them (`NA` otherwise), and `details`: orders and coefficients for ARIMA,
-#'   the code and smoothing for ETS, changepoints and event effects for
-#'   Prophet, the structure for TBATS. `forecast_model()`: the forecasts, a
-#'   `ts` when `y` is one.
+#'   them (`NA` otherwise; the residuals of ARIMA are those of the differenced
+#'   series, so there are fewer of them than observations), and `details`:
+#'   orders and coefficients for ARIMA, the code and smoothing for ETS,
+#'   changepoints (positions from 1) and event effects for Prophet, the
+#'   structure for TBATS and its `minus_two_log_likelihood` (up to a constant;
+#'   the lower the better, as its AIC). `forecast_model()`: the forecasts, a
+#'   `ts` when `y` is one. Both fail when a forecast is not finite, as when
+#'   regressors do not reach the horizon.
 #' @details The estimate lives in memory: a fit restored with `readRDS()`
 #'   cannot forecast and has to be fitted again.
 #' @examples

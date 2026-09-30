@@ -38,10 +38,8 @@ the whole series and their forecasts combined. As a candidate in a
 \code{\link[=backtest]{backtest()}}, an ensemble learns its weights again at every origin.
 }
 \examples{
-\donttest{
 fit <- fit_model(model_ensemble(candidates_default(), top = 3), AirPassengers)
 fit$params
-}
 }
 \seealso{
 Other models:

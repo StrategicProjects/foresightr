@@ -20,3 +20,7 @@ The model, renamed.
 Sets the name (and description) under which a model appears in a
 backtest or an ensemble.
 }
+\examples{
+model <- with_name(model_seasonal_naive(), "same_month", "The same month of last year")
+model
+}

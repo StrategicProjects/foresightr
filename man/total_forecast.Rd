@@ -22,3 +22,8 @@ The forecast of the sum of the next \code{k} periods, with intervals measured
 on totals in the backtest. Adding up the limits of each period would
 overstate the uncertainty of a total.
 }
+\examples{
+bt <- backtest(AirPassengers, list(model_theta(), model_seasonal_naive()), origins = 24)
+total_forecast(bt, 6)
+colSums(bt$forecast[1:6, c("mean", "lower_80", "upper_80")])  # wider, and wrong
+}

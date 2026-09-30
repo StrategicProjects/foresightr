@@ -30,10 +30,14 @@ a \code{ts} brings its own.}
 \code{fit_model()}: an object of class \code{foresight_fit}, a list with the
 model name and description, the estimated \code{params} (named numeric),
 \code{log_likelihood}, \code{aic}, \code{aicc}, \code{bic} and \code{residuals} when the model has
-them (\code{NA} otherwise), and \code{details}: orders and coefficients for ARIMA,
-the code and smoothing for ETS, changepoints and event effects for
-Prophet, the structure for TBATS. \code{forecast_model()}: the forecasts, a
-\code{ts} when \code{y} is one.
+them (\code{NA} otherwise; the residuals of ARIMA are those of the differenced
+series, so there are fewer of them than observations), and \code{details}:
+orders and coefficients for ARIMA, the code and smoothing for ETS,
+changepoints (positions from 1) and event effects for Prophet, the
+structure for TBATS and its \code{minus_two_log_likelihood} (up to a constant;
+the lower the better, as its AIC). \code{forecast_model()}: the forecasts, a
+\code{ts} when \code{y} is one. Both fail when a forecast is not finite, as when
+regressors do not reach the horizon.
 }
 \description{
 \code{fit_model()} estimates a model on a series and keeps what was estimated;

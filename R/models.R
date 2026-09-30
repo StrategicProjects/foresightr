@@ -71,6 +71,8 @@ model_theta <- function() new_model("theta")
 #'
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' fit_model(model_holt_winters(), AirPassengers)$params
 #' @export
 model_holt_winters <- function() new_model("holt_winters")
 
@@ -81,9 +83,12 @@ model_holt_winters <- function() new_model("holt_winters")
 #'
 #' @param window Fit on the last `window` observations only.
 #' @param deflator A price index to deflate by before fitting, one value per
-#'   period of the series and of the horizon; the forecasts are inflated back.
+#'   period from the first observation on. The future of the index is not
+#'   read: the forecasts are inflated back at its growth over the last cycle.
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' forecast_model(model_log_linear(window = 60), AirPassengers, h = 3)
 #' @export
 model_log_linear <- function(window = NULL, deflator = NULL) {
   if (!is.null(deflator)) deflator <- check_numbers(deflator, "deflator")
@@ -114,8 +119,10 @@ model_log_linear <- function(window = NULL, deflator = NULL) {
 #' @export
 model_arima <- function(order = c(0, 1, 1), seasonal = c(0, 0, 0), constant = NULL,
                         regressors = NULL) {
-  new_model("arima", order = check_counts(order, "order", n = 3),
-            seasonal = check_counts(seasonal, "seasonal", n = 3),
+  order <- check_counts(order, "order", n = 3, max = 50)
+  seasonal <- check_counts(seasonal, "seasonal", n = 3, max = 50)
+  if (order[2] > 5 || seasonal[2] > 5) abort("at most 5 differences of each kind.")
+  new_model("arima", order = order, seasonal = seasonal,
             constant = check_flag(constant, "constant", null = TRUE),
             regressors = as_regressors(regressors))
 }
@@ -137,13 +144,17 @@ model_airline <- function() model_arima(c(0, 1, 1), c(0, 1, 1))
 #' @inheritParams model_arima
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' fit <- fit_model(model_auto_arima(), log(AirPassengers))
+#' fit$details$order
+#' fit$details$seasonal_order
 #' @export
 model_auto_arima <- function(criterion = c("aicc", "aic", "bic"), d = NULL, seasonal_d = NULL,
                              max_order = c(5, 5, 2, 2), regressors = NULL) {
   new_model("auto_arima", criterion = match.arg(criterion),
-            d = check_count(d, "d", null = TRUE),
-            seasonal_d = check_count(seasonal_d, "seasonal_d", null = TRUE),
-            max_order = check_counts(max_order, "max_order", n = 4),
+            d = check_count(d, "d", max = 5, null = TRUE),
+            seasonal_d = check_count(seasonal_d, "seasonal_d", max = 5, null = TRUE),
+            max_order = check_counts(max_order, "max_order", n = 4, max = 50),
             regressors = as_regressors(regressors))
 }
 
@@ -190,10 +201,25 @@ model_auto_ets <- function(criterion = c("aicc", "aic", "bic")) {
 #'   yearly patterns, at most half the period).
 #' @param events Named list: for each event, the positions where it happens,
 #'   counted from 1 at the first observation, future ones included.
+#'   Seasonal terms are fitted from two full cycles on.
 #' @param steps Named list: for each lasting change of level, the position
 #'   from which it applies.
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' # ten years of monthly sales with a campaign every other November (+20)
+#' # and a lasting change of level from the 81st month on (-15)
+#' t <- 1:120
+#' sales <- 200 + 0.8 * t + 5 * sin(2 * pi * t / 12)
+#' campaigns <- c(11, 35, 59, 83, 107)
+#' sales[campaigns] <- sales[campaigns] + 20
+#' sales[t >= 81] <- sales[t >= 81] - 15
+#' # the campaign planned for month 131 enters the forecast
+#' model <- model_prophet(changepoints = 0,
+#'                        events = list(campaign = c(campaigns, 131)),
+#'                        steps = list(new_law = 81))
+#' fit <- fit_model(model, ts(sales, frequency = 12))
+#' round(fit$details$effects, 1)
 #' @export
 model_prophet <- function(changepoints = NULL, changepoint_range = NULL,
                           changepoint_prior_scale = NULL, seasonality_prior_scale = NULL,
@@ -204,7 +230,8 @@ model_prophet <- function(changepoints = NULL, changepoint_range = NULL,
     if (!is.list(x) || is.null(names(x)) || any(names(x) == "")) {
       abort("`", what, "` must be a named list.")
     }
-    lapply(x, function(p) check_counts(p, what) - 1)
+    # positions count from 1 in R and from 0 on the other side
+    lapply(x, function(p) check_counts(p, what, min = 1) - 1)
   }
   events <- positions(events, "events")
   steps <- positions(steps, "steps")
@@ -236,19 +263,29 @@ model_prophet <- function(changepoints = NULL, changepoint_range = NULL,
 #' @param arma_orders (p, q) of the ARMA errors, instead of choosing.
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' # a structure given in full fits at once; whatever is left out is chosen
+#' model <- model_tbats(harmonics = 3, box_cox = FALSE, trend = TRUE, damped = FALSE,
+#'                      arma_errors = FALSE)
+#' fit <- fit_model(model, log(AirPassengers))
+#' exp(predict(fit, 3))
 #' @export
 model_tbats <- function(periods = NULL, harmonics = NULL, box_cox = NULL, trend = NULL,
                         damped = NULL, arma_errors = NULL, arma_orders = NULL) {
-  if (!is.null(periods) && (!is.numeric(periods) || any(periods <= 1))) {
-    abort("`periods` must be numbers above 1.")
+  if (!is.null(periods)) {
+    if (!is.numeric(periods) || any(!is.finite(periods)) || any(periods <= 1)) {
+      abort("`periods` must be finite numbers above 1.")
+    }
+    periods <- as.numeric(periods)
   }
   new_model("tbats", periods = periods,
-            harmonics = check_counts(harmonics, "harmonics", null = TRUE),
+            harmonics = check_counts(harmonics, "harmonics", min = 1, max = 1000, null = TRUE),
             box_cox = check_flag(box_cox, "box_cox", null = TRUE),
             trend = check_flag(trend, "trend", null = TRUE),
             damped = check_flag(damped, "damped", null = TRUE),
             arma_errors = check_flag(arma_errors, "arma_errors", null = TRUE),
-            arma_orders = check_counts(arma_orders, "arma_orders", n = 2, null = TRUE))
+            arma_orders = check_counts(arma_orders, "arma_orders", n = 2, max = 50,
+                                       null = TRUE))
 }
 
 #' Intermittent demand
@@ -266,6 +303,9 @@ model_tbats <- function(periods = NULL, harmonics = NULL, box_cox = NULL, trend 
 #' @param optimised Choose `alpha` by the squared error of the rate.
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' demand <- c(0, 0, 3, 0, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0)
+#' forecast_model(model_croston("sba"), demand, h = 3)
 #' @export
 model_croston <- function(variant = c("croston", "sba", "tsb"), alpha = NULL, beta = NULL,
                           optimised = FALSE) {
@@ -287,6 +327,8 @@ model_croston <- function(variant = c("croston", "sba", "tsb"), alpha = NULL, be
 #' @param robust Down-weight outliers in the decomposition.
 #' @inherit model_mean return
 #' @family models
+#' @examples
+#' forecast_model(model_log(model_decomposed(model_drift())), AirPassengers, h = 3)
 #' @export
 model_decomposed <- function(model, periods = NULL, robust = FALSE) {
   new_model("decomposed", model = check_model(model),
@@ -313,10 +355,8 @@ model_decomposed <- function(model, periods = NULL, robust = FALSE) {
 #' @inherit model_mean return
 #' @family models
 #' @examples
-#' \donttest{
 #' fit <- fit_model(model_ensemble(candidates_default(), top = 3), AirPassengers)
 #' fit$params
-#' }
 #' @export
 model_ensemble <- function(members, weighting = c("inverse_error", "equal", "median", "stacked"),
                            origins = NULL, horizon = NULL, top = NULL) {
@@ -361,12 +401,22 @@ model_log <- function(model) model_box_cox(model, 0)
 #' @param name The new name.
 #' @param description The new description; by default the model's own.
 #' @return The model, renamed.
+#' @examples
+#' model <- with_name(model_seasonal_naive(), "same_month", "The same month of last year")
+#' model
 #' @export
 with_name <- function(model, name, description = NULL) {
   check_model(model)
-  if (!is.character(name) || length(name) != 1) abort("`name` must be a string.")
+  if (!is.character(name) || length(name) != 1 || is.na(name) || !nzchar(name)) {
+    abort("`name` must be a string.")
+  }
   model$name <- name
-  if (!is.null(description)) model$description <- description
+  if (!is.null(description)) {
+    if (!is.character(description) || length(description) != 1 || is.na(description)) {
+      abort("`description` must be a string.")
+    }
+    model$description <- description
+  }
   model
 }
 

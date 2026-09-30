@@ -14,7 +14,8 @@ next k periods.
 
 The models, the backtest and the utilities are the Rust crate
 [foresight](https://github.com/milkway/foresight), compiled into the package:
-the numbers are the crate's and the backtest runs on all cores. Charts are
+the numbers are the crate's and the backtest runs on all cores (or as many
+as `foresight_threads()` allows). Charts are
 drawn with ggplot2, the only dependency beyond base R.
 
 <p align="center"><img src="man/figures/architecture.svg" alt="Architecture: the Rust crate foresight holds every computation; foresightr (R, extendr) and pyforesight (Python, PyO3) call it; foresight-go is an independent Go port checked against it." width="100%"></p>
@@ -30,8 +31,9 @@ remotes::install_github("StrategicProjects/foresightr")
 ```
 
 Installing from source compiles the Rust code, so it needs a Rust toolchain
-(<https://rustup.rs>); on Windows, also the GNU target:
-`rustup target add x86_64-pc-windows-gnu`.
+(<https://rustup.rs>, version 1.81 or later); on Windows, also the GNU target:
+`rustup target add x86_64-pc-windows-gnu`. The crates it depends on come with
+the package: nothing is downloaded.
 
 ## Use
 
@@ -84,7 +86,7 @@ backtest(y, c(candidates_thorough(),
 | Combinators | `model_log()`, `model_box_cox()` (λ fixed or by Guerrero's method), `model_decomposed()` (any model on the seasonally adjusted series), `model_ensemble()` (average, median, inverse error or stacked weights), `with_name()` |
 | Candidates | `candidates_default()` (11 models), `candidates_thorough()` (18) |
 | Fitting | `fit_model()`, `predict()`, `forecast_model()` |
-| Backtest | `backtest()`: rolling origin (expanding or fixed window) on all cores; MAPE, MAE, RMSE, MASE and bias by horizon; average of the best models; choice by out-of-sample error; empirical intervals by horizon and for totals (`total_forecast()`) |
+| Backtest | `backtest()`, `foresight_threads()`: rolling origin (expanding or fixed window) on all cores; MAPE, MAE, RMSE, MASE and bias by horizon; average of the best models; choice by out-of-sample error; empirical intervals by horizon and for totals (`total_forecast()`) |
 | Decomposition | `decompose_stl()`, `decompose_mstl()` |
 | Cleaning | `fill_gaps()`, `find_outliers()`, `clean_series()` |
 | Tests and measures | `kpss_statistic()`, `n_differences()`, `n_seasonal_differences()`, `seasonal_strength()`, `autocorrelations()`, `box_cox()`, `inv_box_cox()`, `guerrero_lambda()`, `mape()`, `pct_bias()`, `mae()`, `rmse()`, `mase()` |

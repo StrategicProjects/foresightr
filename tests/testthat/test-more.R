@@ -1,3 +1,4 @@
+skip_if_not_installed("jsonlite")
 more <- recorded("rust_more")
 
 test_that("STL as in Rust", {
@@ -122,7 +123,8 @@ for (name in c("icms", "fpe")) {
       expect_equal(!is.na(d$damping) && d$damping < 1, w$damped)
       expect_equal(!is.na(d$lambda), w$box_cox)
       expect_equal(d$arma, as.numeric(unlist(w$arma)))
-      near(fit$log_likelihood, w$likelihood, 1e-6)
+      near(d$minus_two_log_likelihood, w$likelihood, 1e-6)
+      expect_true(is.na(fit$log_likelihood))
       near(fit$aic, w$aic, 1e-6)
       near(predict(fit, 12), w$forecast, 5e-3)
     }

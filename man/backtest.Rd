@@ -21,7 +21,10 @@ backtest(
 \arguments{
 \item{y}{A \code{ts} or a numeric vector.}
 
-\item{candidates}{A list of models; see \code{\link[=candidates_default]{candidates_default()}}.}
+\item{candidates}{A list of models with distinct names (see
+\code{\link[=with_name]{with_name()}}); by default \code{\link[=candidates_default]{candidates_default()}}. A candidate that
+cannot forecast at every origin and from the whole series is left out,
+with a warning.}
 
 \item{period}{The seasonal period when \code{y} is a plain vector.}
 
@@ -32,30 +35,34 @@ backtest(
 \item{min_train}{Observations to train at the first origin; shorter series
 get fewer origins.}
 
-\item{window}{Train on the last \code{window} observations only (default:
-everything before the origin).}
+\item{window}{Train on the last \code{window} observations only, at every
+origin and for the final forecast (default: everything before the
+origin).}
 
 \item{combine}{Also evaluate the average of the best \code{combine} models
-(fewer than 2 disables it).}
+(fewer than 2, or more than the candidates left, disables it).}
 
-\item{levels}{Coverage of the intervals.}
+\item{levels}{Coverage of the intervals, each above 0 and below 1.}
 
 \item{metric}{\code{"mape"}, \code{"mae"}, \code{"rmse"} or \code{"mase"}.}
 
-\item{parallel}{Fit the origins on all cores. The result is the same
-either way.}
+\item{parallel}{Fit the origins on several threads: all cores, or as many
+as \code{\link[=foresight_threads]{foresight_threads()}} allows. The result is the same either way.}
 }
 \value{
 An object of class \code{foresight_backtest}, a list with
 \itemize{
-\item \code{ranking}: one row per candidate with its \code{score}, whether it was
-\code{chosen}, the models involved and a description;
+\item \code{ranking}: one row per candidate that went through the backtest, with
+its \code{score}, whether it was \code{chosen}, the models involved and a
+description; \code{dropped} names those left out;
 \item \code{best}: the name of the chosen candidate;
 \item \code{forecast}: the forecast of the chosen candidate with its intervals;
 \item \code{candidates}: for each candidate, its \code{accuracy} by horizon (pairs
 evaluated, MAPE, bias, MAE, RMSE, MASE), the relative error \code{bands},
 the \code{forecast}, the \code{cumulative} forecast of totals, the \code{trajectories}
-of the backtest (origins by horizons) and the fitted \code{params};
+of the backtest (origins by horizons) and the fitted \code{params}; an
+interval is \code{NA} at a horizon where every forecast of the backtest was
+zero;
 \item \code{origins}, \code{first_origin} (position of the first period forecast),
 \code{horizon}, \code{metric} and \code{levels}.
 }
@@ -71,10 +78,8 @@ relative error at each horizon, and of the relative error of totals for
 the forecast of the next k periods together.
 }
 \examples{
-\donttest{
 bt <- backtest(AirPassengers, origins = 24)
 bt
 bt$forecast
 total_forecast(bt, 6)
-}
 }
