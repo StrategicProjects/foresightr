@@ -1,6 +1,6 @@
 # foresightr 0.1.0
 
-First release: R interface to the Rust crate foresight 0.7.2.
+First release: R interface to the Rust crate foresight 0.7.3.
 
 * Models as specifications (`model_*()`): benchmarks, Theta, Holt-Winters,
   log-linear regression, seasonal ARIMA with regressors and automatic orders,

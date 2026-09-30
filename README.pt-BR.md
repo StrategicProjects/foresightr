@@ -12,7 +12,7 @@ Os modelos, o backtest e as ferramentas são o crate Rust
 os números são os do crate e o backtest usa todos os núcleos. Os gráficos
 são feitos com ggplot2, a única dependência além do R base.
 
-<p align="center"><img src="man/figures/architecture.svg" alt="Arquitetura do foresight" width="100%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/StrategicProjects/foresightr/main/man/figures/architecture.svg" alt="Arquitetura do foresight" width="100%"></p>
 
 **Site:** <https://strategicprojects.github.io/foresightr/>
 

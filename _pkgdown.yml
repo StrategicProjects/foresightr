@@ -43,6 +43,7 @@ reference:
       - autoplot.foresight_backtest
       - theme_foresight
       - candidates_default
+      - foresight_threads
   - title: "Fit and forecast"
     contents:
       - fit_model

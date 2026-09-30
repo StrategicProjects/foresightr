@@ -15,7 +15,7 @@ path = 'document.rs'
 
 [dependencies]
 extendr-api = '0.9'
-fs = { package = 'foresight', version = '=0.7.2' }
+fs = { package = 'foresight', version = '=0.7.3' }
 
 [profile.release]
 lto = true
