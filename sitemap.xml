@@ -11,6 +11,7 @@
 <url><loc>https://strategicprojects.github.io/foresightr/authors.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/index.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/news/index.html</loc></url>
+<url><loc>https://strategicprojects.github.io/foresightr/reference/autoplot.foresight_backtest.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/backtest.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/candidates_default.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/decompose_stl.html</loc></url>
@@ -35,7 +36,8 @@
 <url><loc>https://strategicprojects.github.io/foresightr/reference/model_prophet.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/model_tbats.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/model_theta.html</loc></url>
-<url><loc>https://strategicprojects.github.io/foresightr/reference/plot.foresight_backtest.html</loc></url>
+<url><loc>https://strategicprojects.github.io/foresightr/reference/reexports.html</loc></url>
+<url><loc>https://strategicprojects.github.io/foresightr/reference/theme_foresight.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/total_forecast.html</loc></url>
 <url><loc>https://strategicprojects.github.io/foresightr/reference/with_name.html</loc></url>
 </urlset>

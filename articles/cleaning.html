@@ -87,7 +87,7 @@ pattern and remainder by LOESS. Its defaults are those of
 <span><span class="co">#&gt; &lt;foresight decomposition&gt; 144 observations, period 12</span></span>
 <span><span class="co">#&gt; Strength of the trend: 0.996</span></span>
 <span><span class="co">#&gt; Strength of seasonality (12): 0.961</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cleaning_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="672"></p>
 <p>The strengths, from 0 to 1, say how much of the variation the trend
 and the seasonal pattern explain; <code><a href="../reference/kpss_statistic.html">seasonal_strength()</a></code>
@@ -108,7 +108,7 @@ outliers.</p>
 <span><span class="va">d</span><span class="op">$</span><span class="va">seasonal_strength</span></span>
 <span><span class="co">#&gt;  seasonal_7 seasonal_30 </span></span>
 <span><span class="co">#&gt;   0.8464823   0.9687255</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cleaning_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="672"></p>
 <p>The same decomposition serves to forecast:
 <code><a href="../reference/model_decomposed.html">model_decomposed()</a></code> runs any model on the seasonally

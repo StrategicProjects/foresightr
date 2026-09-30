@@ -9,6 +9,9 @@ point forecasts with what was known then.
 library(foresightr)
 ```
 
+![The Rust crate foresight does every computation; this package, the
+Python package pyforesight and Rust programs call it.](architecture.svg)
+
 ## The data
 
 Monthly ICMS, the main tax revenue of the Brazilian state of Piauí, from
@@ -66,7 +69,7 @@ head(bt$forecast)
 #> 4       4 2026.750 846.9183 802.2410 907.6957 793.4335 920.1498
 #> 5       5 2026.833 845.9071 811.9032 894.3556 785.9314 925.1126
 #> 6       6 2026.917 874.5325 831.2537 929.7832 815.2608 939.4974
-plot(bt)
+autoplot(bt)
 ```
 
 ![](foresightr_files/figure-html/unnamed-chunk-5-1.png)
@@ -142,7 +145,7 @@ d
 #> <foresight decomposition> 112 observations, period 12
 #> Strength of the trend: 0.939
 #> Strength of seasonality (12): 0.515
-plot(d)
+autoplot(d)
 ```
 
 ![](foresightr_files/figure-html/unnamed-chunk-10-1.png)

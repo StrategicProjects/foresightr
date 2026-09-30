@@ -11,7 +11,12 @@ for the total of the next k periods.
 The models, the backtest and the utilities are the Rust crate
 [foresight](https://github.com/milkway/foresight), compiled into the
 package: the numbers are the crate’s and the backtest runs on all cores.
-The R side has no dependencies beyond base R.
+Charts are drawn with ggplot2, the only dependency beyond base R.
+
+![Architecture: the Rust crate foresight holds every computation;
+foresightr (R, extendr) and pyforesight (Python, PyO3) call it;
+foresight-go is an independent Go port checked against
+it.](reference/figures/architecture.svg)
 
 **Website:** <https://strategicprojects.github.io/foresightr/> ·
 [Português](https://github.com/StrategicProjects/foresightr/blob/main/README.pt-BR.md)
@@ -39,7 +44,8 @@ bt <- backtest(AirPassengers)
 bt                      # the ranking and the choice
 bt$forecast             # the forecast with 80% and 95% intervals
 total_forecast(bt, 6)   # the total of the next six months, with its own interval
-plot(bt)
+autoplot(bt)            # a ggplot: history, forecast and intervals
+autoplot(bt, "accuracy") # the error of the best candidates by horizon
 ```
 
 A `ts` brings its seasonal period and the season of its first
@@ -87,8 +93,13 @@ backtest(y, c(candidates_thorough(),
 | Cleaning | [`fill_gaps()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md), [`find_outliers()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md), [`clean_series()`](https://strategicprojects.github.io/foresightr/reference/fill_gaps.md) |
 | Tests and measures | [`kpss_statistic()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`n_differences()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`n_seasonal_differences()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`seasonal_strength()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`autocorrelations()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`box_cox()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`inv_box_cox()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`guerrero_lambda()`](https://strategicprojects.github.io/foresightr/reference/kpss_statistic.md), [`mape()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`pct_bias()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`mae()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`rmse()`](https://strategicprojects.github.io/foresightr/reference/mape.md), [`mase()`](https://strategicprojects.github.io/foresightr/reference/mape.md) |
 | Regressors | [`fourier_terms()`](https://strategicprojects.github.io/foresightr/reference/fourier_terms.md), [`seasonal_dummies()`](https://strategicprojects.github.io/foresightr/reference/fourier_terms.md), or any columns of your own |
+| Charts | [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html) / [`plot()`](https://rdrr.io/r/graphics/plot.default.html) of a backtest (forecast, accuracy by horizon, ranking) or a decomposition, as ggplot objects; [`theme_foresight()`](https://strategicprojects.github.io/foresightr/reference/theme_foresight.md) |
 
 ## How it differs from the usual toolkits
+
+![How a model is chosen: every candidate is refitted at each origin and
+forecasts ahead; the errors by horizon rank the candidates and give the
+empirical intervals.](reference/figures/backtest.svg)
 
 Most forecasting packages choose a model by an in-sample information
 criterion and derive intervals from distributional assumptions. Here the

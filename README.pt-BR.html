@@ -43,7 +43,9 @@
 
 <p>Previsão de séries temporais em R que escolhe o modelo pelo que teria dado certo.</p>
 <p>O <code>foresightr</code> ajusta vários modelos a uma série, refaz o passado para ver como cada um teria se saído, escolhe pelo erro fora da amostra e dá faixas tiradas dos erros de fato observados, inclusive para o total dos próximos k períodos.</p>
-<p>Os modelos, o backtest e as ferramentas são o crate Rust <a href="https://github.com/milkway/foresight" class="external-link">foresight</a>, compilado dentro do pacote: os números são os do crate e o backtest usa todos os núcleos. O lado R não depende de nada além do R base.</p>
+<p>Os modelos, o backtest e as ferramentas são o crate Rust <a href="https://github.com/milkway/foresight" class="external-link">foresight</a>, compilado dentro do pacote: os números são os do crate e o backtest usa todos os núcleos. Os gráficos são feitos com ggplot2, a única dependência além do R base.</p>
+<p align="center">
+<img src="reference/figures/architecture.svg" alt="Arquitetura do foresight" width="100%"></p>
 <p><strong>Site:</strong> <a href="https://strategicprojects.github.io/foresightr/" class="uri">https://strategicprojects.github.io/foresightr/</a></p>
 <div class="section level2">
 <h2 id="instalação">Instalação<a class="anchor" aria-label="anchor" href="#instala%C3%A7%C3%A3o"></a></h2>
@@ -58,7 +60,7 @@
 <span><span class="va">bt</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/backtest.html">backtest</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>   <span class="co"># 36 origens, 12 meses à frente, 11 modelos</span></span>
 <span><span class="va">bt</span><span class="op">$</span><span class="va">forecast</span>                     <span class="co"># previsão com faixas de 80% e 95%</span></span>
 <span><span class="fu"><a href="reference/total_forecast.html">total_forecast</a></span><span class="op">(</span><span class="va">bt</span>, <span class="fl">6</span><span class="op">)</span>           <span class="co"># total dos próximos seis meses, com faixa própria</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span>                    <span class="co"># gráfico ggplot com histórico, previsão e faixas</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="o-que-tem">O que tem<a class="anchor" aria-label="anchor" href="#o-que-tem"></a></h2>

@@ -11,6 +11,9 @@ fpe <- ts(data$fpe / 1e6, start = c(2017, 3), frequency = 12)
 
 ## Replaying the past
 
+![How a model is chosen: replay the past, measure the errors, choose,
+and take the intervals from the errors.](backtest-diagram.svg)
+
 A rolling-origin backtest stands at each of the last `origins` periods
 of the series, fits every candidate on the data before that point only,
 and forecasts up to `horizon` periods ahead. Each forecast is compared
@@ -49,6 +52,13 @@ acc[c(1, 3, 6, 12), ]
 #> 12      12 25 5.069807 -0.4405582622 34.28807 40.99345 0.5336450
 ```
 
+``` r
+
+autoplot(bt, "accuracy")
+```
+
+![](backtest_files/figure-html/unnamed-chunk-5-1.png)
+
 The ranking averages the chosen `metric` over the horizons. The last
 candidate is the simple average of the best `combine` models, often
 better than either:
@@ -63,6 +73,13 @@ bt$ranking[order(bt$ranking$score), c("name", "score")][1:5, ]
 #> 4                  seasonal_naive_growth 5.833625
 #> 11                           log_prophet 6.111936
 ```
+
+``` r
+
+autoplot(bt, "ranking")
+```
+
+![](backtest_files/figure-html/unnamed-chunk-7-1.png)
 
 Changing the metric changes the ranking only when models trade accuracy
 in different ways; `"mase"` scales the errors by the seasonal naive
@@ -129,18 +146,23 @@ colSums(bt$forecast[1:6, c("mean", "lower_80", "upper_80")])
 
 ## Looking at it
 
+The charts are ggplot2 objects, drawn with
+[`theme_foresight()`](https://strategicprojects.github.io/foresightr/reference/theme_foresight.md);
+they can be themed and annotated further.
+
 ``` r
 
-plot(bt)
+autoplot(bt)
 ```
 
-![](backtest_files/figure-html/unnamed-chunk-10-1.png)
+![](backtest_files/figure-html/unnamed-chunk-12-1.png)
 
 Any candidate can be plotted or inspected by name:
 
 ``` r
 
-plot(bt, candidate = "seasonal_naive")
+autoplot(bt, candidate = "seasonal_naive") +
+  ggplot2::labs(caption = "Source: Siconfi/STN, RREO Anexo 03")
 ```
 
-![](backtest_files/figure-html/unnamed-chunk-11-1.png)
+![](backtest_files/figure-html/unnamed-chunk-13-1.png)

@@ -78,6 +78,7 @@
 the past, and at each point forecasts with what was known then.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/StrategicProjects/foresightr" class="external-link">foresightr</a></span><span class="op">)</span></span></code></pre></div>
+<p><img src="architecture.svg" alt="The Rust crate foresight does every computation; this package, the Python package pyforesight and Rust programs call it." style="width:100%"></p>
 <div class="section level2">
 <h2 id="the-data">The data<a class="anchor" aria-label="anchor" href="#the-data"></a>
 </h2>
@@ -127,7 +128,7 @@ quantiles of the errors it made in the backtest, horizon by horizon:</p>
 <span><span class="co">#&gt; 4       4 2026.750 846.9183 802.2410 907.6957 793.4335 920.1498</span></span>
 <span><span class="co">#&gt; 5       5 2026.833 845.9071 811.9032 894.3556 785.9314 925.1126</span></span>
 <span><span class="co">#&gt; 6       6 2026.917 874.5325 831.2537 929.7832 815.2608 939.4974</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">bt</span><span class="op">)</span></span></code></pre></div>
 <p><img src="foresightr_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="672"></p>
 <p>The error of each candidate by horizon:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -192,7 +193,7 @@ weights again at every origin of the backtest.</p>
 <span><span class="co">#&gt; &lt;foresight decomposition&gt; 112 observations, period 12</span></span>
 <span><span class="co">#&gt; Strength of the trend: 0.939</span></span>
 <span><span class="co">#&gt; Strength of seasonality (12): 0.515</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
 <p><img src="foresightr_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="672"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

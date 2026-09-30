@@ -10,8 +10,10 @@ próximos k períodos.
 
 Os modelos, o backtest e as ferramentas são o crate Rust
 [foresight](https://github.com/milkway/foresight), compilado dentro do
-pacote: os números são os do crate e o backtest usa todos os núcleos. O
-lado R não depende de nada além do R base.
+pacote: os números são os do crate e o backtest usa todos os núcleos. Os
+gráficos são feitos com ggplot2, a única dependência além do R base.
+
+![Arquitetura do foresight](reference/figures/architecture.svg)
 
 **Site:** <https://strategicprojects.github.io/foresightr/>
 
@@ -34,7 +36,7 @@ library(foresightr)
 bt <- backtest(AirPassengers)   # 36 origens, 12 meses à frente, 11 modelos
 bt$forecast                     # previsão com faixas de 80% e 95%
 total_forecast(bt, 6)           # total dos próximos seis meses, com faixa própria
-plot(bt)
+autoplot(bt)                    # gráfico ggplot com histórico, previsão e faixas
 ```
 
 ## O que tem

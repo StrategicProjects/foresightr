@@ -20,7 +20,7 @@ d
 #> <foresight decomposition> 144 observations, period 12
 #> Strength of the trend: 0.996
 #> Strength of seasonality (12): 0.961
-plot(d)
+autoplot(d)
 ```
 
 ![](cleaning_files/figure-html/unnamed-chunk-3-1.png)
@@ -46,7 +46,7 @@ d <- decompose_mstl(daily, periods = c(7, 30))
 d$seasonal_strength
 #>  seasonal_7 seasonal_30 
 #>   0.8464823   0.9687255
-plot(d)
+autoplot(d)
 ```
 
 ![](cleaning_files/figure-html/unnamed-chunk-4-1.png)

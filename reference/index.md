@@ -8,8 +8,13 @@ Replay the past with several candidates and keep what would have worked.
   : Choose a model by what would have worked
 - [`total_forecast()`](https://strategicprojects.github.io/foresightr/reference/total_forecast.md)
   : Forecast of a total
-- [`plot(`*`<foresight_backtest>`*`)`](https://strategicprojects.github.io/foresightr/reference/plot.foresight_backtest.md)
-  : Plot a backtest
+- [`autoplot(`*`<foresight_backtest>`*`)`](https://strategicprojects.github.io/foresightr/reference/autoplot.foresight_backtest.md)
+  [`plot(`*`<foresight_backtest>`*`)`](https://strategicprojects.github.io/foresightr/reference/autoplot.foresight_backtest.md)
+  [`autoplot(`*`<foresight_decomposition>`*`)`](https://strategicprojects.github.io/foresightr/reference/autoplot.foresight_backtest.md)
+  [`plot(`*`<foresight_decomposition>`*`)`](https://strategicprojects.github.io/foresightr/reference/autoplot.foresight_backtest.md)
+  : Charts of a backtest or a decomposition
+- [`theme_foresight()`](https://strategicprojects.github.io/foresightr/reference/theme_foresight.md)
+  : The theme of the package's charts
 - [`candidates_default()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md)
   [`candidates_thorough()`](https://strategicprojects.github.io/foresightr/reference/candidates_default.md)
   : Ready sets of candidates
